@@ -18,7 +18,7 @@ export default function Footer() {
   };
 
   return (
-    <footer style={{ background: "#000", padding: "20px 20px 60px", textAlign: "center" }}>
+    <footer style={{ padding: "20px 20px 60px", textAlign: "center", filter: "invert(1)" }}>
       <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
         <li style={liStyle}>We throw parties for sad music</li>
         <li style={{ ...liStyle, color: "rgba(255,255,255,0.4)" }}>

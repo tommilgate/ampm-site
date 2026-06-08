@@ -1,22 +1,8 @@
 "use client";
 
-export default function HeroVideo({
-  videoSrc,
-  backgroundSrc,
-}: {
-  videoSrc: string;
-  backgroundSrc: string;
-}) {
+export default function HeroVideo({ videoSrc }: { videoSrc: string }) {
   return (
-    <div
-      className="absolute inset-0 overflow-hidden"
-      style={{
-        backgroundImage: `url(${backgroundSrc})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
+    <div className="absolute inset-0 overflow-hidden">
       <video
         autoPlay
         muted
