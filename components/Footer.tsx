@@ -9,17 +9,23 @@ export default function Footer() {
     { label: "Twitter", href: "https://twitter.com/ampmemonight", src: "https://cdn.shopify.com/s/files/1/2141/4575/files/twitter.svg?v=1755349413" },
   ];
 
+  const liStyle: React.CSSProperties = {
+    margin: "10px 15px",
+    textTransform: "uppercase",
+    letterSpacing: "1px",
+    fontSize: "11.4px",
+    color: "rgba(255,255,255,0.6)",
+  };
+
   return (
-    <footer style={{ background: "#000", padding: "40px 20px 60px", textAlign: "center" }}>
-      <ul style={{ listStyle: "none", padding: 0, margin: "0 0 24px" }}>
-        <li style={{ color: "rgba(255,255,255,0.6)", fontSize: "11px", textTransform: "uppercase", letterSpacing: "2px", marginBottom: "6px" }}>
-          WE THROW PARTIES FOR SAD MUSIC
+    <footer style={{ background: "#000", padding: "20px 20px 60px", textAlign: "center" }}>
+      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        <li style={liStyle}>We throw parties for sad music</li>
+        <li style={{ ...liStyle, color: "rgba(255,255,255,0.4)" }}>
+          AM//PM is Australia&apos;s biggest touring emo night
         </li>
-        <li style={{ color: "rgba(255,255,255,0.4)", fontSize: "11px", textTransform: "uppercase", letterSpacing: "2px", marginBottom: "24px" }}>
-          AM//PM IS AUSTRALIA&apos;S BIGGEST TOURING EMO NIGHT
-        </li>
-        <li>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "20px", marginBottom: "24px" }}>
+        <li style={{ margin: "10px 15px" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "20px" }}>
             {socials.map((s) => (
               <a
                 key={s.label}
@@ -35,13 +41,13 @@ export default function Footer() {
             ))}
           </div>
         </li>
-        <li style={{ color: "rgba(255,255,255,0.3)", fontSize: "11px", marginBottom: "6px" }}>
+        <li style={{ ...liStyle, color: "rgba(255,255,255,0.3)" }}>
           © 2024 AM//PM Emo Night, The Neighbourhood
         </li>
-        <li style={{ fontSize: "11px" }}>
-          <a href="/privacy" style={{ color: "rgba(255,255,255,0.3)", textDecoration: "none" }}>Privacy Policy</a>
-          <span style={{ color: "rgba(255,255,255,0.2)", margin: "0 8px" }}>|</span>
-          <a href="/terms" style={{ color: "rgba(255,255,255,0.3)", textDecoration: "none" }}>Terms &amp; Conditions</a>
+        <li style={{ ...liStyle, color: "rgba(255,255,255,0.3)" }}>
+          <a href="/privacy" style={{ color: "inherit", textDecoration: "none" }}>Privacy Policy</a>
+          <span style={{ margin: "0 8px", color: "rgba(255,255,255,0.2)" }}>|</span>
+          <a href="/terms" style={{ color: "inherit", textDecoration: "none" }}>Terms &amp; Conditions</a>
         </li>
       </ul>
     </footer>
