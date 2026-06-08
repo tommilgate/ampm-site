@@ -13,19 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`h-full ${jost.className}`}>
-      <body className="min-h-full flex flex-col bg-black text-white">
-        {/* Fixed background — stays put while everything scrolls over it */}
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: -1,
-            backgroundImage: "url(/BACKGROUND_1.png)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        />
+      <body className="min-h-full flex flex-col text-white" style={{ background: "transparent" }}>
         {children}
       </body>
     </html>
