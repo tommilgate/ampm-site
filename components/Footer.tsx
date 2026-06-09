@@ -43,7 +43,7 @@ export default function Footer() {
         // Footer has its OWN pre-inverted texture background that scrolls with it
         // (like Shopify's Background_fix.png). This avoids backdrop-filter, which made
         // the texture "swim" against the fixed hero background while scrolling.
-        backgroundImage: "url(/BACKGROUND_inverted.png)",
+        backgroundImage: "url(/BACKGROUND_inverted.webp)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         padding: "22px 24px 24px",

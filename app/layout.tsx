@@ -28,10 +28,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             position: "fixed",
             inset: 0,
             zIndex: -1,
-            backgroundImage: "url(/BACKGROUND_1.png)",
+            backgroundImage: "url(/BACKGROUND_1.webp)",
             backgroundSize: "cover",
             backgroundPosition: "center",
             pointerEvents: "none",
+            // Promote to its own GPU layer so scroll compositing stays off the main thread
+            transform: "translateZ(0)",
+            willChange: "transform",
           }}
         />
         {children}

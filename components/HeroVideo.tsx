@@ -35,6 +35,10 @@ export default function HeroVideo() {
           height: "100%",
           objectFit: "cover",
           mixBlendMode: "screen",
+          // Promote the blended video to its own GPU layer to reduce scroll repaint cost
+          transform: "translateZ(0)",
+          willChange: "transform",
+          backfaceVisibility: "hidden",
         }}
       >
         <source src="/Video.webm" type="video/webm" />
