@@ -5,7 +5,10 @@ import Footer from "@/components/Footer";
 import { prisma } from "@/lib/prisma";
 import { getSetting } from "@/app/admin/actions";
 
-export const dynamic = "force-dynamic";
+// Cached/ISR: served instantly from cache. The admin actions call revalidatePath("/events")
+// on every add/edit/delete/reorder/hero change, so it regenerates with fresh data on edits.
+// The 300s window is a self-healing fallback.
+export const revalidate = 300;
 
 export default async function EventsPage() {
   const events = await prisma.event.findMany({
