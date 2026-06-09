@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import BottomNav from "@/components/BottomNav";
 import { prisma } from "@/lib/prisma";
+import { getSetting } from "@/app/admin/actions";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,7 @@ export default async function EventsPage() {
     where: { enabled: true },
     orderBy: { order: "asc" },
   });
+  const heroUrl = await getSetting("eventsHeroUrl");
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#000" }}>
@@ -21,6 +23,16 @@ export default async function EventsPage() {
       </header>
 
       <main className="flex-1 w-full max-w-[480px] mx-auto px-4 pt-3 pb-36">
+        {/* Page hero image */}
+        {heroUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={heroUrl}
+            alt="AM//PM Emo Night"
+            style={{ width: "100%", borderRadius: 14, display: "block", marginBottom: 18 }}
+          />
+        )}
+
         {events.length === 0 ? (
           <p className="text-center text-white/40 uppercase tracking-widest text-xs py-20">
             No events announced right now — check back soon.
@@ -37,23 +49,6 @@ export default async function EventsPage() {
                   padding: 12,
                 }}
               >
-                {/* Square artwork */}
-                {event.imageUrl && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={event.imageUrl}
-                    alt={event.city}
-                    style={{
-                      width: "100%",
-                      aspectRatio: "1 / 1",
-                      objectFit: "cover",
-                      borderRadius: 9,
-                      display: "block",
-                      marginBottom: 12,
-                    }}
-                  />
-                )}
-
                 {/* Date bar */}
                 <div
                   style={{

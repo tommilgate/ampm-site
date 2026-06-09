@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { isAuthed, login, logout, addEvent, deleteEvent, toggleEvent } from "./actions";
+import { isAuthed, login, logout, addEvent, getSetting, uploadHero, removeHero } from "./actions";
+import AdminEventsList from "@/components/AdminEventsList";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,7 @@ const labelStyle: React.CSSProperties = {
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; added?: string; updated?: string }>;
+  searchParams: Promise<{ error?: string; added?: string; updated?: string; hero?: string }>;
 }) {
   const authed = await isAuthed();
   const sp = await searchParams;
@@ -37,6 +38,7 @@ export default async function AdminPage({
   }
 
   const events = await prisma.event.findMany({ orderBy: { order: "asc" } });
+  const heroUrl = await getSetting("eventsHeroUrl");
 
   return (
     <div style={{ minHeight: "100vh", background: "#000", color: "#fff", padding: "32px 20px 80px", fontFamily: "var(--font-jost), sans-serif" }}>
@@ -47,6 +49,36 @@ export default async function AdminPage({
             <button type="submit" style={{ background: "none", border: "1px solid #333", color: "#888", padding: "6px 12px", borderRadius: 6, fontSize: 12, textTransform: "uppercase", letterSpacing: 1, cursor: "pointer" }}>Log out</button>
           </form>
         </div>
+
+        {/* Events page hero image */}
+        <section style={{ background: "#0c0c0c", border: "1px solid #1e1e1e", borderRadius: 14, padding: 22, marginBottom: 24 }}>
+          <h2 style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: 2, marginBottom: 6, color: "#fe5859" }}>Events page hero image</h2>
+          <p style={{ color: "#888", fontSize: 12, marginBottom: 16 }}>Shown at the top of the events page. Upload an image file.</p>
+          {sp.hero && <p style={{ color: "#4ade80", fontSize: 13, marginBottom: 12 }}>✓ Hero image updated.</p>}
+
+          {heroUrl && (
+            <div style={{ marginBottom: 16 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={heroUrl} alt="Current hero" style={{ width: "100%", maxHeight: 220, objectFit: "cover", borderRadius: 10, display: "block" }} />
+            </div>
+          )}
+
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+            <form action={uploadHero} style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+              <input type="file" name="file" accept="image/*" required style={{ color: "#ccc", fontSize: 13 }} />
+              <button type="submit" style={{ padding: "10px 20px", borderRadius: 8, background: "#fe5859", color: "#fff", fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, fontSize: 12, border: "none", cursor: "pointer" }}>
+                {heroUrl ? "Replace" : "Upload"}
+              </button>
+            </form>
+            {heroUrl && (
+              <form action={removeHero}>
+                <button type="submit" style={{ padding: "10px 16px", borderRadius: 8, background: "none", border: "1px solid #4a1f1f", color: "#fe5859", fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, fontSize: 12, cursor: "pointer" }}>
+                  Remove
+                </button>
+              </form>
+            )}
+          </div>
+        </section>
 
         {/* Add event form */}
         <section style={{ background: "#0c0c0c", border: "1px solid #1e1e1e", borderRadius: 14, padding: 22, marginBottom: 32 }}>
@@ -69,10 +101,6 @@ export default async function AdminPage({
               <label style={labelStyle}>Support acts</label>
               <input name="supports" placeholder="WITH NIGHTLIGHT + CLOSURE" style={inputStyle} />
             </div>
-            <div style={{ gridColumn: "1 / -1" }}>
-              <label style={labelStyle}>Square artwork URL</label>
-              <input name="imageUrl" placeholder="https://... (square image)" style={inputStyle} />
-            </div>
             <div>
               <label style={labelStyle}>Tickets URL</label>
               <input name="ticketsUrl" placeholder="https://tickets.oztix..." style={inputStyle} />
@@ -89,41 +117,16 @@ export default async function AdminPage({
           </form>
         </section>
 
-        {/* Existing events */}
+        {/* Existing events — draggable */}
         <h2 style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: 2, marginBottom: 14, color: "#888" }}>
           Current events ({events.length})
         </h2>
         {sp.updated && <p style={{ color: "#4ade80", fontSize: 13, marginBottom: 12 }}>✓ Event updated.</p>}
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {events.map((e) => (
-            <div key={e.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, background: "#0c0c0c", border: "1px solid #1e1e1e", borderRadius: 12, padding: "14px 16px", opacity: e.enabled ? 1 : 0.5 }}>
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 11, color: "#fe5859", letterSpacing: 1, textTransform: "uppercase" }}>{e.date}</div>
-                <div style={{ fontSize: 15, fontWeight: 700, textTransform: "uppercase" }}>{e.city}</div>
-                <div style={{ fontSize: 12, color: "#999" }}>{e.venue}{e.supports ? ` · ${e.supports}` : ""}</div>
-              </div>
-              <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-                <a href={`/admin/edit/${e.id}`} style={{ border: "1px solid #333", color: "#fff", padding: "7px 11px", borderRadius: 6, fontSize: 11, textTransform: "uppercase", letterSpacing: 1, whiteSpace: "nowrap", display: "inline-flex", alignItems: "center" }}>
-                  Edit
-                </a>
-                <form action={toggleEvent}>
-                  <input type="hidden" name="id" value={e.id} />
-                  <input type="hidden" name="enabled" value={String(e.enabled)} />
-                  <button type="submit" style={{ background: "none", border: "1px solid #333", color: "#aaa", padding: "7px 11px", borderRadius: 6, fontSize: 11, textTransform: "uppercase", letterSpacing: 1, cursor: "pointer", whiteSpace: "nowrap" }}>
-                    {e.enabled ? "Hide" : "Show"}
-                  </button>
-                </form>
-                <form action={deleteEvent}>
-                  <input type="hidden" name="id" value={e.id} />
-                  <button type="submit" style={{ background: "none", border: "1px solid #4a1f1f", color: "#fe5859", padding: "7px 11px", borderRadius: 6, fontSize: 11, textTransform: "uppercase", letterSpacing: 1, cursor: "pointer" }}>
-                    Delete
-                  </button>
-                </form>
-              </div>
-            </div>
-          ))}
-          {events.length === 0 && <p style={{ color: "#666", fontSize: 13 }}>No events yet — add one above.</p>}
-        </div>
+        <AdminEventsList
+          initial={events.map((e) => ({
+            id: e.id, date: e.date, city: e.city, venue: e.venue, supports: e.supports, enabled: e.enabled,
+          }))}
+        />
       </div>
     </div>
   );

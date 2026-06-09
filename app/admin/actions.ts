@@ -38,6 +38,55 @@ function requireAuth(authed: boolean) {
   if (!authed) throw new Error("Not authorized");
 }
 
+// ---- Page hero image (events page) ----
+
+export async function getSetting(key: string): Promise<string | null> {
+  const s = await prisma.setting.findUnique({ where: { key } });
+  return s?.value ?? null;
+}
+
+export async function uploadHero(formData: FormData) {
+  requireAuth(await isAuthed());
+  const file = formData.get("file") as File | null;
+  if (!file || file.size === 0) redirect("/admin?error=nofile");
+
+  const { put } = await import("@vercel/blob");
+  const ext = (file!.name.split(".").pop() || "jpg").toLowerCase();
+  const blob = await put(`events-hero-${Date.now()}.${ext}`, file!, {
+    access: "public",
+    addRandomSuffix: true,
+  });
+
+  await prisma.setting.upsert({
+    where: { key: "eventsHeroUrl" },
+    update: { value: blob.url },
+    create: { key: "eventsHeroUrl", value: blob.url },
+  });
+
+  revalidatePath("/events");
+  revalidatePath("/admin");
+  redirect("/admin?hero=1");
+}
+
+export async function removeHero() {
+  requireAuth(await isAuthed());
+  await prisma.setting.deleteMany({ where: { key: "eventsHeroUrl" } });
+  revalidatePath("/events");
+  revalidatePath("/admin");
+  redirect("/admin");
+}
+
+// ---- Drag reorder ----
+
+export async function reorderEvents(orderedIds: number[]) {
+  requireAuth(await isAuthed());
+  await prisma.$transaction(
+    orderedIds.map((id, i) => prisma.event.update({ where: { id }, data: { order: i + 1 } }))
+  );
+  revalidatePath("/events");
+  revalidatePath("/admin");
+}
+
 export async function addEvent(formData: FormData) {
   requireAuth(await isAuthed());
 

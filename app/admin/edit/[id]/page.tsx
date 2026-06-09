@@ -52,10 +52,6 @@ export default async function EditEventPage({
             <label style={labelStyle}>Support acts</label>
             <input name="supports" defaultValue={event.supports ?? ""} style={inputStyle} />
           </div>
-          <div style={{ gridColumn: "1 / -1" }}>
-            <label style={labelStyle}>Square artwork URL</label>
-            <input name="imageUrl" defaultValue={event.imageUrl ?? ""} style={inputStyle} />
-          </div>
           <div>
             <label style={labelStyle}>Tickets URL</label>
             <input name="ticketsUrl" defaultValue={event.ticketsUrl ?? ""} style={inputStyle} />
@@ -63,10 +59,6 @@ export default async function EditEventPage({
           <div>
             <label style={labelStyle}>RSVP URL</label>
             <input name="rsvpUrl" defaultValue={event.rsvpUrl ?? ""} style={inputStyle} />
-          </div>
-          <div>
-            <label style={labelStyle}>Order (lower = first)</label>
-            <input name="order" type="number" defaultValue={event.order} style={inputStyle} />
           </div>
 
           <div style={{ gridColumn: "1 / -1", display: "flex", gap: 12, marginTop: 4 }}>

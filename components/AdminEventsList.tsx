@@ -1,0 +1,133 @@
+"use client";
+
+import { useState } from "react";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { reorderEvents, deleteEvent, toggleEvent } from "@/app/admin/actions";
+
+export type AdminEvent = {
+  id: number;
+  date: string;
+  city: string;
+  venue: string;
+  supports: string | null;
+  enabled: boolean;
+};
+
+function Row({ ev }: { ev: AdminEvent }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: ev.id });
+
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : ev.enabled ? 1 : 0.5,
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+    background: "#0c0c0c",
+    border: "1px solid #1e1e1e",
+    borderRadius: 12,
+    padding: "12px 14px",
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      {/* Drag handle */}
+      <button
+        {...attributes}
+        {...listeners}
+        aria-label="Drag to reorder"
+        style={{ cursor: "grab", color: "#666", background: "none", border: "none", padding: "4px 6px", fontSize: 18, lineHeight: 1, touchAction: "none" }}
+      >
+        ⋮⋮
+      </button>
+
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 11, color: "#fe5859", letterSpacing: 1, textTransform: "uppercase" }}>{ev.date}</div>
+        <div style={{ fontSize: 15, fontWeight: 700, textTransform: "uppercase" }}>{ev.city}</div>
+        <div style={{ fontSize: 12, color: "#999" }}>{ev.venue}{ev.supports ? ` · ${ev.supports}` : ""}</div>
+      </div>
+
+      <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+        <a href={`/admin/edit/${ev.id}`} style={btn}>Edit</a>
+        <form action={toggleEvent}>
+          <input type="hidden" name="id" value={ev.id} />
+          <input type="hidden" name="enabled" value={String(ev.enabled)} />
+          <button type="submit" style={btn}>{ev.enabled ? "Hide" : "Show"}</button>
+        </form>
+        <form action={deleteEvent}>
+          <input type="hidden" name="id" value={ev.id} />
+          <button type="submit" style={{ ...btn, color: "#fe5859", borderColor: "#4a1f1f" }}>Delete</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+const btn: React.CSSProperties = {
+  border: "1px solid #333",
+  color: "#fff",
+  background: "none",
+  padding: "7px 11px",
+  borderRadius: 6,
+  fontSize: 11,
+  textTransform: "uppercase",
+  letterSpacing: 1,
+  whiteSpace: "nowrap",
+  cursor: "pointer",
+  display: "inline-flex",
+  alignItems: "center",
+};
+
+export default function AdminEventsList({ initial }: { initial: AdminEvent[] }) {
+  const [items, setItems] = useState(initial);
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor)
+  );
+
+  function onDragEnd(e: DragEndEvent) {
+    const { active, over } = e;
+    if (over && active.id !== over.id) {
+      const oldIndex = items.findIndex((i) => i.id === active.id);
+      const newIndex = items.findIndex((i) => i.id === over.id);
+      const next = arrayMove(items, oldIndex, newIndex);
+      setItems(next);
+      reorderEvents(next.map((i) => i.id)); // persist new order
+    }
+  }
+
+  if (items.length === 0) {
+    return <p style={{ color: "#666", fontSize: 13 }}>No events yet — add one above.</p>;
+  }
+
+  return (
+    <>
+      <p style={{ color: "#666", fontSize: 12, marginBottom: 10 }}>Drag the ⋮⋮ handle to reorder.</p>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+        <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {items.map((ev) => (
+              <Row key={ev.id} ev={ev} />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
+    </>
+  );
+}
