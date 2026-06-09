@@ -16,17 +16,11 @@ export default function HeroVideo() {
 
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* Texture sits behind the video, inside the hero (scrolls with it). */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: "url(/BACKGROUND_1.png)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      {/* Video blends against the texture above with screen mode. */}
+      {/*
+        Hero is transparent — the fixed texture (in layout, z-index -1) shows through
+        behind it. The video blends against that STATIONARY texture with screen mode,
+        so scrolling the page reveals the blend effect dynamically.
+      */}
       <video
         ref={ref}
         autoPlay
