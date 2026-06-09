@@ -9,22 +9,18 @@ export default function Footer() {
     { label: "Twitter", href: "https://twitter.com/ampmemonight", src: "https://cdn.shopify.com/s/files/1/2141/4575/files/twitter.svg?v=1755349413" },
   ];
 
-  const liStyle: React.CSSProperties = {
-    margin: "10px 15px",
-    textTransform: "uppercase",
-    letterSpacing: "1px",
-    fontSize: "11.4px",
-    color: "rgba(255,255,255,0.6)",
-  };
-
   return (
-    <footer style={{ padding: "20px 20px 60px", textAlign: "center", filter: "invert(1)" }}>
+    // filter: invert(1) flips the texture from dark→light, and text from white→dark
+    // No background colour — the fixed body background shows straight through
+    <footer style={{ filter: "invert(1)", padding: "40px 20px 60px", textAlign: "center" }}>
       <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-        <li style={liStyle}>We throw parties for sad music</li>
-        <li style={{ ...liStyle, color: "rgba(255,255,255,0.4)" }}>
+        <li style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "1px", color: "rgba(255,255,255,0.9)", marginBottom: "6px" }}>
+          We throw parties for sad music
+        </li>
+        <li style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "1px", color: "rgba(255,255,255,0.6)", marginBottom: "24px" }}>
           AM//PM is Australia&apos;s biggest touring emo night
         </li>
-        <li style={{ margin: "10px 15px" }}>
+        <li style={{ marginBottom: "24px" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "20px" }}>
             {socials.map((s) => (
               <a
@@ -33,21 +29,22 @@ export default function Footer() {
                 target={s.href.startsWith("mailto") ? undefined : "_blank"}
                 rel="noopener noreferrer"
                 aria-label={s.label}
-                style={{ opacity: 0.7, display: "flex" }}
+                style={{ display: "flex", opacity: 0.8 }}
               >
+                {/* No individual invert — the parent footer invert handles it */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={s.src} alt={s.label} width={18} height={18} style={{ filter: "invert(1)" }} />
+                <img src={s.src} alt={s.label} width={18} height={18} />
               </a>
             ))}
           </div>
         </li>
-        <li style={{ ...liStyle, color: "rgba(255,255,255,0.3)" }}>
+        <li style={{ fontSize: "11px", letterSpacing: "1px", color: "rgba(255,255,255,0.5)", marginBottom: "6px" }}>
           © 2024 AM//PM Emo Night, The Neighbourhood
         </li>
-        <li style={{ ...liStyle, color: "rgba(255,255,255,0.3)" }}>
-          <a href="/privacy" style={{ color: "inherit", textDecoration: "none" }}>Privacy Policy</a>
-          <span style={{ margin: "0 8px", color: "rgba(255,255,255,0.2)" }}>|</span>
-          <a href="/terms" style={{ color: "inherit", textDecoration: "none" }}>Terms &amp; Conditions</a>
+        <li style={{ fontSize: "11px", letterSpacing: "1px" }}>
+          <a href="/privacy" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>Privacy Policy</a>
+          <span style={{ color: "rgba(255,255,255,0.3)", margin: "0 8px" }}>|</span>
+          <a href="/terms" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>Terms &amp; Conditions</a>
         </li>
       </ul>
     </footer>
