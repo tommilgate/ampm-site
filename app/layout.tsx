@@ -54,6 +54,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`h-full ${jost.variable} ${tinos.variable} ${jost.className}`}>
       <body className="min-h-full flex flex-col text-white" style={{ background: "#000" }}>
+        {/* Seeka tracking — beforeInteractive, loads in <head> before all other scripts */}
+        <SeekaTracking />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -85,7 +87,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <SmoothScroll>{children}</SmoothScroll>
-        <SeekaTracking />
       </body>
     </html>
   );
