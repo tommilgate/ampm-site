@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Jost, Tinos } from "next/font/google";
 import "./globals.css";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const jost = Jost({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-jost" });
 // Tinos is a metric-compatible Times New Roman — matches the serif in the reference footer
@@ -37,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             willChange: "transform",
           }}
         />
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   );
