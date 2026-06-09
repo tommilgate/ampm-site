@@ -1,4 +1,14 @@
-export default function Footer() {
+export default function Footer({ dark = false }: { dark?: boolean }) {
+  // Color scheme: default = light inverted texture w/ dark text (homepage),
+  // dark = solid black w/ white text & icons (events page).
+  const c = {
+    tagline: dark ? "#fff" : "#111",
+    sub: dark ? "rgba(255,255,255,0.6)" : "#333",
+    icon: dark ? "#fff" : "#111",
+    meta: dark ? "rgba(255,255,255,0.5)" : "#333",
+    sep: dark ? "rgba(255,255,255,0.3)" : "#333",
+  };
+
   const socials = [
     {
       label: "Instagram",
@@ -40,13 +50,16 @@ export default function Footer() {
   return (
     <footer
       style={{
-        // Footer has its OWN pre-inverted texture background that scrolls with it
-        // (like Shopify's Background_fix.png). This avoids backdrop-filter, which made
-        // the texture "swim" against the fixed hero background while scrolling.
-        backgroundImage: "url(/BACKGROUND_inverted.webp)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        padding: "22px 24px 24px",
+        // Default: own pre-inverted texture (homepage). Dark: solid black (events page).
+        ...(dark
+          ? { background: "#000" }
+          : {
+              backgroundImage: "url(/BACKGROUND_inverted.webp)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }),
+        // extra bottom padding in dark mode (events page) so the floating MENU clears the text
+        padding: dark ? "22px 24px 96px" : "22px 24px 24px",
         textAlign: "center",
       }}
     >
@@ -57,7 +70,7 @@ export default function Footer() {
         fontWeight: 400,
         textTransform: "uppercase",
         letterSpacing: "0.5px",
-        color: "#111",
+        color: c.tagline,
         margin: "0 0 4px",
         lineHeight: 1.2,
       }}>
@@ -70,7 +83,7 @@ export default function Footer() {
         fontWeight: 500,
         textTransform: "uppercase",
         letterSpacing: "1px",
-        color: "#333",
+        color: c.sub,
         margin: "0 0 16px",
       }}>
         AM//PM is Australia&apos;s biggest touring emo night
@@ -92,7 +105,7 @@ export default function Footer() {
             target={s.href.startsWith("mailto") ? undefined : "_blank"}
             rel="noopener noreferrer"
             aria-label={s.label}
-            style={{ color: "#111", display: "flex", width: 18, height: 18 }}
+            style={{ color: c.icon, display: "flex", width: 18, height: 18 }}
           >
             {s.svg}
           </a>
@@ -100,13 +113,13 @@ export default function Footer() {
       </div>
 
       {/* Copyright — sans */}
-      <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "10px", letterSpacing: "0.5px", color: "#333", margin: "0 0 4px" }}>
+      <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "10px", letterSpacing: "0.5px", color: c.meta, margin: "0 0 4px" }}>
         © {new Date().getFullYear()} AM//PM Emo Night, The Neighbourhood
       </p>
-      <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "10px", letterSpacing: "0.5px", color: "#333", margin: 0 }}>
-        <a href="https://www.ampmemonight.com/policies/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: "#333", textDecoration: "none" }}>Privacy Policy</a>
-        <span style={{ margin: "0 6px" }}>|</span>
-        <a href="https://www.ampmemonight.com/policies/terms-of-service" target="_blank" rel="noopener noreferrer" style={{ color: "#333", textDecoration: "none" }}>Terms &amp; Conditions</a>
+      <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "10px", letterSpacing: "0.5px", color: c.meta, margin: 0 }}>
+        <a href="https://www.ampmemonight.com/policies/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: c.meta, textDecoration: "none" }}>Privacy Policy</a>
+        <span style={{ margin: "0 6px", color: c.sep }}>|</span>
+        <a href="https://www.ampmemonight.com/policies/terms-of-service" target="_blank" rel="noopener noreferrer" style={{ color: c.meta, textDecoration: "none" }}>Terms &amp; Conditions</a>
       </p>
     </footer>
   );

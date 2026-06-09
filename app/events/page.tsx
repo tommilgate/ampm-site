@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import BottomNav from "@/components/BottomNav";
+import Footer from "@/components/Footer";
 import { prisma } from "@/lib/prisma";
 import { getSetting } from "@/app/admin/actions";
 
@@ -70,7 +71,7 @@ export default async function EventsPage() {
                   <div style={{ minWidth: 0 }}>
                     <h2
                       style={{
-                        fontSize: "clamp(16px, 4.6vw, 19px)",
+                        fontSize: "clamp(14px, 3.8vw, 16px)",
                         fontWeight: 800,
                         textTransform: "uppercase",
                         letterSpacing: 0.3,
@@ -128,6 +129,7 @@ export default async function EventsPage() {
         )}
       </main>
 
+      <Footer dark />
       <BottomNav persistent />
     </div>
   );
