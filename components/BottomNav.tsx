@@ -9,7 +9,7 @@ const links = [
   { label: "MERCH", href: "https://www.ampmemonight.com/collections/all", external: true },
 ];
 
-export default function BottomNav() {
+export default function BottomNav({ persistent = false }: { persistent?: boolean }) {
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
 
@@ -19,14 +19,15 @@ export default function BottomNav() {
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
-  // Fade the floating MENU out once the user scrolls past the hero,
-  // so it never overlaps the footer.
+  // On the homepage the floating MENU fades out once you scroll past the hero so it
+  // never overlaps the footer. On inner pages (persistent) it stays visible.
   useEffect(() => {
+    if (persistent) return;
     const onScroll = () => setHidden(window.scrollY > 60);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [persistent]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -41,7 +42,7 @@ export default function BottomNav() {
         aria-label="Open menu"
         style={{
           position: "fixed",
-          bottom: "15%",
+          bottom: persistent ? "24px" : "15%",
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 9999,
