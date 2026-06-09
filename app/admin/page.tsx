@@ -69,6 +69,10 @@ export default async function AdminPage({
               <label style={labelStyle}>Support acts</label>
               <input name="supports" placeholder="WITH NIGHTLIGHT + CLOSURE" style={inputStyle} />
             </div>
+            <div style={{ gridColumn: "1 / -1" }}>
+              <label style={labelStyle}>Square artwork URL</label>
+              <input name="imageUrl" placeholder="https://... (square image)" style={inputStyle} />
+            </div>
             <div>
               <label style={labelStyle}>Tickets URL</label>
               <input name="ticketsUrl" placeholder="https://tickets.oztix..." style={inputStyle} />

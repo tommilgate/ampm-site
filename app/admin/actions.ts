@@ -63,6 +63,7 @@ export async function addEvent(formData: FormData) {
       supports: get("supports"),
       ticketsUrl: get("ticketsUrl"),
       rsvpUrl: get("rsvpUrl"),
+      imageUrl: get("imageUrl"),
       order,
     },
   });
