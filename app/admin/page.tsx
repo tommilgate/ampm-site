@@ -40,6 +40,16 @@ export default async function AdminPage({
   const events = await prisma.event.findMany({ orderBy: { order: "asc" } });
   const heroUrl = await getSetting("eventsHeroUrl");
 
+  // Per-event click counts (first-party tracking)
+  const clickGroups = await prisma.click.groupBy({ by: ["eventId", "kind"], _count: { _all: true } });
+  const clicksByEvent: Record<number, { ticket: number; rsvp: number }> = {};
+  for (const g of clickGroups) {
+    if (g.eventId == null) continue;
+    clicksByEvent[g.eventId] ??= { ticket: 0, rsvp: 0 };
+    if (g.kind === "ticket") clicksByEvent[g.eventId].ticket = g._count._all;
+    if (g.kind === "rsvp") clicksByEvent[g.eventId].rsvp = g._count._all;
+  }
+
   return (
     <div style={{ minHeight: "100vh", background: "#000", color: "#fff", padding: "32px 20px 80px", fontFamily: "var(--font-jost), sans-serif" }}>
       <div style={{ maxWidth: 760, margin: "0 auto" }}>
@@ -125,6 +135,8 @@ export default async function AdminPage({
         <AdminEventsList
           initial={events.map((e) => ({
             id: e.id, date: e.date, city: e.city, venue: e.venue, supports: e.supports, enabled: e.enabled,
+            ticketClicks: clicksByEvent[e.id]?.ticket ?? 0,
+            rsvpClicks: clicksByEvent[e.id]?.rsvp ?? 0,
           }))}
         />
       </div>

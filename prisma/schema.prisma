@@ -26,6 +26,17 @@ model Setting {
   value String
 }
 
+// First-party click tracking — owned data, queryable per event, exposed via /api/stats.
+model Click {
+  id        Int      @id @default(autoincrement())
+  eventId   Int?
+  kind      String   // "ticket" | "rsvp" | other
+  createdAt DateTime @default(now())
+
+  @@index([eventId])
+  @@index([kind])
+}
+
 model Album {
   id        Int      @id @default(autoincrement())
   title     String

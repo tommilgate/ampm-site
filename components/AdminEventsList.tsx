@@ -26,6 +26,8 @@ export type AdminEvent = {
   venue: string;
   supports: string | null;
   enabled: boolean;
+  ticketClicks: number;
+  rsvpClicks: number;
 };
 
 function Row({ ev }: { ev: AdminEvent }) {
@@ -62,6 +64,9 @@ function Row({ ev }: { ev: AdminEvent }) {
         <div style={{ fontSize: 11, color: "#fe5859", letterSpacing: 1, textTransform: "uppercase" }}>{ev.date}</div>
         <div style={{ fontSize: 15, fontWeight: 700, textTransform: "uppercase" }}>{ev.city}</div>
         <div style={{ fontSize: 12, color: "#999" }}>{ev.venue}{ev.supports ? ` · ${ev.supports}` : ""}</div>
+        <div style={{ fontSize: 11, color: "#fe5859", marginTop: 4, letterSpacing: 0.5 }}>
+          🎟 {ev.ticketClicks} ticket{ev.ticketClicks === 1 ? "" : "s"} · {ev.rsvpClicks} RSVP click{ev.rsvpClicks === 1 ? "" : "s"}
+        </div>
       </div>
 
       <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>

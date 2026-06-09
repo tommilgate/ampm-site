@@ -101,6 +101,8 @@ export default async function EventsPage() {
                       <TrackedLink
                         id={`event-rsvp-${event.id}`}
                         event="rsvp_click"
+                        kind="rsvp"
+                        eventId={event.id}
                         properties={{ event_id: event.id, event_name: event.city, venue: event.venue, url: event.rsvpUrl }}
                         href={event.rsvpUrl}
                         target="_blank"
@@ -118,6 +120,8 @@ export default async function EventsPage() {
                       <TrackedLink
                         id={`event-tickets-${event.id}`}
                         event="ticket_click"
+                        kind="ticket"
+                        eventId={event.id}
                         properties={{ event_id: event.id, event_name: event.city, venue: event.venue, url: event.ticketsUrl }}
                         href={event.ticketsUrl}
                         target="_blank"
