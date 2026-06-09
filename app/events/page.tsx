@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import BottomNav from "@/components/BottomNav";
 import Footer from "@/components/Footer";
+import TrackedLink from "@/components/TrackedLink";
 import { prisma } from "@/lib/prisma";
 import { getSetting } from "@/app/admin/actions";
 
@@ -97,8 +98,10 @@ export default async function EventsPage() {
 
                   <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
                     {event.rsvpUrl && (
-                      <a
+                      <TrackedLink
                         id={`event-rsvp-${event.id}`}
+                        event="rsvp_click"
+                        properties={{ event_id: event.id, event_name: event.city, venue: event.venue, url: event.rsvpUrl }}
                         href={event.rsvpUrl}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -109,11 +112,13 @@ export default async function EventsPage() {
                         }}
                       >
                         RSVP
-                      </a>
+                      </TrackedLink>
                     )}
                     {event.ticketsUrl && (
-                      <a
+                      <TrackedLink
                         id={`event-tickets-${event.id}`}
+                        event="ticket_click"
+                        properties={{ event_id: event.id, event_name: event.city, venue: event.venue, url: event.ticketsUrl }}
                         href={event.ticketsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -124,7 +129,7 @@ export default async function EventsPage() {
                         }}
                       >
                         Tickets
-                      </a>
+                      </TrackedLink>
                     )}
                   </div>
                 </div>
