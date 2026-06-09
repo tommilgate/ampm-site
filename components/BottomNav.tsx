@@ -5,8 +5,8 @@ import Link from "next/link";
 
 const links = [
   { label: "EVENTS", href: "/events" },
-  { label: "PHOTOS", href: "https://store.ampmemonight.com/pages/photos", external: true },
-  { label: "MERCH", href: "https://store.ampmemonight.com/collections/all", external: true },
+  { label: "PHOTOS", href: "https://ampmemonight.shop/pages/photos", external: true },
+  { label: "MERCH", href: "https://ampmemonight.shop/collections/all", external: true },
 ];
 
 export default function BottomNav({ persistent = false }: { persistent?: boolean }) {

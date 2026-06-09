@@ -28,7 +28,7 @@ export default function Header() {
 
         {/* Right — cart (Shopify) */}
         <a
-          href="https://store.ampmemonight.com/cart"
+          href="https://ampmemonight.shop/cart"
           target="_blank"
           rel="noopener noreferrer"
           className="justify-self-end p-1"
@@ -61,8 +61,8 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
   return (
     <>
       <Link href="/events" className={cls} onClick={onClick}>Events</Link>
-      <a href="https://store.ampmemonight.com/pages/photos" target="_blank" rel="noopener noreferrer" className={cls} onClick={onClick}>Photos</a>
-      <a href="https://store.ampmemonight.com/collections/all" target="_blank" rel="noopener noreferrer" className={cls} onClick={onClick}>Merch</a>
+      <a href="https://ampmemonight.shop/pages/photos" target="_blank" rel="noopener noreferrer" className={cls} onClick={onClick}>Photos</a>
+      <a href="https://ampmemonight.shop/collections/all" target="_blank" rel="noopener noreferrer" className={cls} onClick={onClick}>Merch</a>
     </>
   );
 }
