@@ -4,64 +4,60 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function Header({ transparent = false }: { transparent?: boolean }) {
+export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 ${
-          transparent ? "bg-transparent" : "bg-black border-b border-white/10"
-        }`}
-      >
-        <Link href="/" className="flex items-center">
-          <Image
-            src="/ampmheartwhite.png"
-            alt="AM//PM Emo Night"
-            width={40}
-            height={40}
-            className="object-contain"
-            priority
-          />
+      <header className="fixed top-0 left-0 right-0 z-50 grid grid-cols-3 items-center px-6 py-4 bg-black/95 backdrop-blur border-b border-white/10">
+        {/* Left — hamburger */}
+        <button
+          onClick={() => setMenuOpen(true)}
+          className="flex flex-col gap-1.5 p-1 justify-self-start"
+          aria-label="Open menu"
+        >
+          <span className="block h-0.5 w-6 bg-white" />
+          <span className="block h-0.5 w-6 bg-white" />
+          <span className="block h-0.5 w-6 bg-white" />
+        </button>
+
+        {/* Center — heart logo */}
+        <Link href="/" className="justify-self-center" aria-label="Home">
+          <Image src="/ampmheartwhite.png" alt="AM//PM" width={34} height={34} className="object-contain" priority />
         </Link>
 
-        {/* Desktop nav — hidden on homepage (transparent mode) */}
-        {!transparent && (
-          <nav className="hidden md:flex items-center gap-8">
-            <NavLinks />
-          </nav>
-        )}
-
-        {/* Hamburger */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="flex flex-col gap-1.5 p-2"
-          aria-label="Toggle menu"
+        {/* Right — cart (Shopify) */}
+        <a
+          href="https://www.ampmemonight.com/cart"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="justify-self-end p-1"
+          aria-label="Cart"
         >
-          <span className={`block h-0.5 w-6 bg-white transition-transform ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
-          <span className={`block h-0.5 w-6 bg-white transition-opacity ${menuOpen ? "opacity-0" : ""}`} />
-          <span className={`block h-0.5 w-6 bg-white transition-transform ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
-        </button>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.6">
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="20" cy="21" r="1" />
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+          </svg>
+        </a>
       </header>
 
-      {/* Mobile drawer */}
+      {/* Full-screen menu drawer */}
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/95 flex flex-col items-center justify-center gap-8"
+          className="fixed inset-0 z-[60] bg-black/97 flex flex-col items-center justify-center gap-10"
           onClick={() => setMenuOpen(false)}
         >
-          <NavLinks mobile onClick={() => setMenuOpen(false)} />
+          <button onClick={() => setMenuOpen(false)} aria-label="Close menu" className="absolute top-5 right-6 text-white text-3xl leading-none">×</button>
+          <NavLinks onClick={() => setMenuOpen(false)} />
         </div>
       )}
     </>
   );
 }
 
-function NavLinks({ mobile, onClick }: { mobile?: boolean; onClick?: () => void }) {
-  const cls = mobile
-    ? "text-3xl font-bold uppercase tracking-widest text-white hover:text-[#fe5859] transition-colors"
-    : "text-sm font-semibold uppercase tracking-widest text-white hover:text-[#fe5859] transition-colors";
-
+function NavLinks({ onClick }: { onClick?: () => void }) {
+  const cls = "text-3xl font-extrabold uppercase tracking-widest text-white hover:text-[#fe5859] transition-colors";
   return (
     <>
       <Link href="/events" className={cls} onClick={onClick}>Events</Link>
