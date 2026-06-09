@@ -11,11 +11,21 @@ const links = [
 
 export default function BottomNav() {
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Fade the floating MENU out once the user scrolls past the hero,
+  // so it never overlaps the footer.
+  useEffect(() => {
+    const onScroll = () => setHidden(window.scrollY > 60);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -43,6 +53,8 @@ export default function BottomNav() {
           padding: "16px 40px",
           cursor: "pointer",
           boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+          opacity: hidden ? 0 : 1,
+          pointerEvents: hidden ? "none" : "auto",
           transition: "all 0.3s ease",
         }}
       >

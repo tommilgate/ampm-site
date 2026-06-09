@@ -40,27 +40,35 @@ export default function Footer() {
   return (
     <footer
       style={{
-        filter: "invert(1)",
-        padding: "40px 24px 60px",
+        // backdrop-filter inverts the fixed background texture BEHIND the footer
+        // (dark grain → light/cream), while our text on top stays dark. This is the
+        // Shopify effect — filter:invert only flips the footer's own pixels, which is wrong.
+        backdropFilter: "invert(1)",
+        WebkitBackdropFilter: "invert(1)",
+        padding: "48px 24px 64px",
         textAlign: "center",
       }}
     >
-      {/* Taglines */}
+      {/* Main tagline — serif (Tinos / Times) */}
       <p style={{
-        fontSize: "16px",
-        fontWeight: 700,
+        fontFamily: "var(--font-tinos), 'Times New Roman', serif",
+        fontSize: "22px",
+        fontWeight: 400,
         textTransform: "uppercase",
-        letterSpacing: "2px",
-        color: "#000",
-        margin: "0 0 8px",
+        letterSpacing: "0.5px",
+        color: "#111",
+        margin: "0 0 6px",
+        lineHeight: 1.2,
       }}>
         We throw parties for sad music
       </p>
+      {/* Subtext — sans */}
       <p style={{
+        fontFamily: "var(--font-jost), sans-serif",
         fontSize: "13px",
         fontWeight: 500,
         textTransform: "uppercase",
-        letterSpacing: "1.5px",
+        letterSpacing: "1px",
         color: "#333",
         margin: "0 0 28px",
       }}>
@@ -72,7 +80,7 @@ export default function Footer() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        gap: "20px",
+        gap: "18px",
         flexWrap: "wrap",
         marginBottom: "28px",
       }}>
@@ -83,18 +91,18 @@ export default function Footer() {
             target={s.href.startsWith("mailto") ? undefined : "_blank"}
             rel="noopener noreferrer"
             aria-label={s.label}
-            style={{ color: "#000", display: "flex", width: 40, height: 40 }}
+            style={{ color: "#111", display: "flex", width: 28, height: 28 }}
           >
             {s.svg}
           </a>
         ))}
       </div>
 
-      {/* Copyright */}
-      <p style={{ fontSize: "13px", color: "#333", margin: "0 0 6px" }}>
+      {/* Copyright — sans */}
+      <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "13px", color: "#333", margin: "0 0 6px" }}>
         © 2024 AM//PM Emo Night, The Neighbourhood
       </p>
-      <p style={{ fontSize: "13px", color: "#333", margin: 0 }}>
+      <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "13px", color: "#333", margin: 0 }}>
         <a href="/privacy" style={{ color: "#333", textDecoration: "none" }}>Privacy Policy</a>
         <span style={{ margin: "0 8px" }}>|</span>
         <a href="/terms" style={{ color: "#333", textDecoration: "none" }}>Terms &amp; Conditions</a>

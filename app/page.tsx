@@ -6,7 +6,7 @@ export default function HomePage() {
   return (
     <main className="flex flex-col">
       <div className="relative w-full" style={{ height: "100dvh" }}>
-        <HeroVideo videoSrc="/Video.mp4" />
+        <HeroVideo />
         <BottomNav />
       </div>
       <Footer />
