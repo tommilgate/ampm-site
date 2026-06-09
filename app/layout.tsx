@@ -27,7 +27,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           aria-hidden="true"
           style={{
             position: "fixed",
-            inset: 0,
+            top: 0,
+            left: 0,
+            width: "100%",
+            // 100lvh = large viewport height: always covers, even when the address bar
+            // is hidden, so no gap appears at the bottom on mobile.
+            height: "100lvh",
             zIndex: -1,
             backgroundImage: "url(/BACKGROUND_1.webp)",
             backgroundSize: "cover",
