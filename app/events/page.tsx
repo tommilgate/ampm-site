@@ -21,7 +21,7 @@ export default async function EventsPage() {
     <div className="min-h-screen flex flex-col" style={{ background: "#000" }}>
       {/* Centered logo, links home */}
       <header className="w-full flex justify-center pt-7 pb-2">
-        <Link href="/" aria-label="Home">
+        <Link id="events-logo-home" href="/" aria-label="Home">
           <Image src="/ampmheartwhite.png" alt="AM//PM" width={30} height={30} className="object-contain" priority />
         </Link>
       </header>
@@ -98,6 +98,7 @@ export default async function EventsPage() {
                   <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
                     {event.rsvpUrl && (
                       <a
+                        id={`event-rsvp-${event.id}`}
                         href={event.rsvpUrl}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -112,6 +113,7 @@ export default async function EventsPage() {
                     )}
                     {event.ticketsUrl && (
                       <a
+                        id={`event-tickets-${event.id}`}
                         href={event.ticketsUrl}
                         target="_blank"
                         rel="noopener noreferrer"

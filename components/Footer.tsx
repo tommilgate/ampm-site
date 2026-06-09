@@ -101,6 +101,7 @@ export default function Footer({ dark = false }: { dark?: boolean }) {
         {socials.map((s) => (
           <a
             key={s.label}
+            id={`footer-social-${s.label.toLowerCase()}`}
             href={s.href}
             target={s.href.startsWith("mailto") ? undefined : "_blank"}
             rel="noopener noreferrer"
@@ -117,9 +118,9 @@ export default function Footer({ dark = false }: { dark?: boolean }) {
         © {new Date().getFullYear()} AM//PM Emo Night, The Neighbourhood
       </p>
       <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "10px", letterSpacing: "0.5px", color: c.meta, margin: 0 }}>
-        <a href="/privacy" style={{ color: c.meta, textDecoration: "none" }}>Privacy Policy</a>
+        <a id="footer-link-privacy" href="/privacy" style={{ color: c.meta, textDecoration: "none" }}>Privacy Policy</a>
         <span style={{ margin: "0 6px", color: c.sep }}>|</span>
-        <a href="/terms" style={{ color: c.meta, textDecoration: "none" }}>Terms &amp; Conditions</a>
+        <a id="footer-link-terms" href="/terms" style={{ color: c.meta, textDecoration: "none" }}>Terms &amp; Conditions</a>
       </p>
     </footer>
   );

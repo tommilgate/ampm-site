@@ -49,6 +49,7 @@ function Row({ ev }: { ev: AdminEvent }) {
     <div ref={setNodeRef} style={style}>
       {/* Drag handle */}
       <button
+        id={`admin-event-drag-${ev.id}`}
         {...attributes}
         {...listeners}
         aria-label="Drag to reorder"
@@ -64,15 +65,15 @@ function Row({ ev }: { ev: AdminEvent }) {
       </div>
 
       <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-        <a href={`/admin/edit/${ev.id}`} style={btn}>Edit</a>
-        <form action={toggleEvent}>
+        <a id={`admin-event-edit-${ev.id}`} href={`/admin/edit/${ev.id}`} style={btn}>Edit</a>
+        <form id={`admin-event-toggle-form-${ev.id}`} action={toggleEvent}>
           <input type="hidden" name="id" value={ev.id} />
           <input type="hidden" name="enabled" value={String(ev.enabled)} />
-          <button type="submit" style={btn}>{ev.enabled ? "Hide" : "Show"}</button>
+          <button id={`admin-event-toggle-${ev.id}`} type="submit" style={btn}>{ev.enabled ? "Hide" : "Show"}</button>
         </form>
-        <form action={deleteEvent}>
+        <form id={`admin-event-delete-form-${ev.id}`} action={deleteEvent}>
           <input type="hidden" name="id" value={ev.id} />
-          <button type="submit" style={{ ...btn, color: "#fe5859", borderColor: "#4a1f1f" }}>Delete</button>
+          <button id={`admin-event-delete-${ev.id}`} type="submit" style={{ ...btn, color: "#fe5859", borderColor: "#4a1f1f" }}>Delete</button>
         </form>
       </div>
     </div>

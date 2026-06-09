@@ -6,7 +6,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#000" }}>
       <header className="w-full flex justify-center pt-7 pb-2">
-        <Link href="/" aria-label="Home">
+        <Link id="legal-logo-home" href="/" aria-label="Home">
           <Image src="/ampmheartwhite.png" alt="AM//PM" width={30} height={30} className="object-contain" priority />
         </Link>
       </header>

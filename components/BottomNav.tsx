@@ -38,6 +38,7 @@ export default function BottomNav({ persistent = false }: { persistent?: boolean
     <>
       {/* Trigger button — Option A liquid-glass pill */}
       <button
+        id="nav-menu-trigger"
         onClick={() => setOpen(true)}
         aria-label="Open menu"
         style={{
@@ -142,10 +143,12 @@ export default function BottomNav({ persistent = false }: { persistent?: boolean
                     letterSpacing: "3px",
                     borderTop: i === 0 ? "none" : "1px solid rgba(255,255,255,0.12)",
                   };
+                  const linkId = `nav-menu-link-${link.label.toLowerCase()}`;
                   return (
                     <li key={link.label}>
                       {link.external ? (
                         <a
+                          id={linkId}
                           href={link.href}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -156,6 +159,7 @@ export default function BottomNav({ persistent = false }: { persistent?: boolean
                         </a>
                       ) : (
                         <Link
+                          id={linkId}
                           href={link.href}
                           style={itemStyle}
                           onClick={() => setOpen(false)}
