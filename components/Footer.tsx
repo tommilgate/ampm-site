@@ -117,9 +117,9 @@ export default function Footer({ dark = false }: { dark?: boolean }) {
         © {new Date().getFullYear()} AM//PM Emo Night, The Neighbourhood
       </p>
       <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "10px", letterSpacing: "0.5px", color: c.meta, margin: 0 }}>
-        <a href="https://www.ampmemonight.com/policies/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: c.meta, textDecoration: "none" }}>Privacy Policy</a>
+        <a href="/privacy" style={{ color: c.meta, textDecoration: "none" }}>Privacy Policy</a>
         <span style={{ margin: "0 6px", color: c.sep }}>|</span>
-        <a href="https://www.ampmemonight.com/policies/terms-of-service" target="_blank" rel="noopener noreferrer" style={{ color: c.meta, textDecoration: "none" }}>Terms &amp; Conditions</a>
+        <a href="/terms" style={{ color: c.meta, textDecoration: "none" }}>Terms &amp; Conditions</a>
       </p>
     </footer>
   );
