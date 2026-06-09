@@ -17,32 +17,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`h-full ${jost.variable} ${tinos.variable} ${jost.className}`}>
       <body className="min-h-full flex flex-col text-white" style={{ background: "#000" }}>
-        {/*
-          Fixed background texture — stays put in the viewport while the page scrolls.
-          z-index: -1 keeps it BEHIND all content (including the footer's own opaque
-          texture), so it never paints over anything. The hero video scrolls over this
-          stationary texture, so the screen-blend interaction shifts as you scroll.
-        */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            // 100lvh = large viewport height: always covers, even when the address bar
-            // is hidden, so no gap appears at the bottom on mobile.
-            height: "100lvh",
-            zIndex: -1,
-            backgroundImage: "url(/BACKGROUND_1.webp)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            pointerEvents: "none",
-            // Promote to its own GPU layer so scroll compositing stays off the main thread
-            transform: "translateZ(0)",
-            willChange: "transform",
-          }}
-        />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

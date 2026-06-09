@@ -101,12 +101,12 @@ export default function Footer() {
 
       {/* Copyright — sans */}
       <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "10px", letterSpacing: "0.5px", color: "#333", margin: "0 0 4px" }}>
-        © 2024 AM//PM Emo Night, The Neighbourhood
+        © {new Date().getFullYear()} AM//PM Emo Night, The Neighbourhood
       </p>
       <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "10px", letterSpacing: "0.5px", color: "#333", margin: 0 }}>
-        <a href="/privacy" style={{ color: "#333", textDecoration: "none" }}>Privacy Policy</a>
+        <a href="https://www.ampmemonight.com/policies/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: "#333", textDecoration: "none" }}>Privacy Policy</a>
         <span style={{ margin: "0 6px" }}>|</span>
-        <a href="/terms" style={{ color: "#333", textDecoration: "none" }}>Terms &amp; Conditions</a>
+        <a href="https://www.ampmemonight.com/policies/terms-of-service" target="_blank" rel="noopener noreferrer" style={{ color: "#333", textDecoration: "none" }}>Terms &amp; Conditions</a>
       </p>
     </footer>
   );
