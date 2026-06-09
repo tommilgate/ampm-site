@@ -46,7 +46,7 @@ export default function Footer() {
         backgroundImage: "url(/BACKGROUND_inverted.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        padding: "36px 24px 48px",
+        padding: "22px 24px 24px",
         textAlign: "center",
       }}
     >
@@ -71,7 +71,7 @@ export default function Footer() {
         textTransform: "uppercase",
         letterSpacing: "1px",
         color: "#333",
-        margin: "0 0 20px",
+        margin: "0 0 16px",
       }}>
         AM//PM is Australia&apos;s biggest touring emo night
       </p>
@@ -83,7 +83,7 @@ export default function Footer() {
         justifyContent: "center",
         gap: "16px",
         flexWrap: "wrap",
-        marginBottom: "20px",
+        marginBottom: "16px",
       }}>
         {socials.map((s) => (
           <a
