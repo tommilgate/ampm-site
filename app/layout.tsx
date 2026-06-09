@@ -4,6 +4,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import SeekaTracking from "@/components/SeekaTracking";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 const jost = Jost({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-jost" });
 // Tinos is a metric-compatible Times New Roman — matches the serif in the reference footer
@@ -89,6 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <SmoothScroll>{children}</SmoothScroll>
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
