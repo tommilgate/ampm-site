@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-  icons: { icon: "/favi.jpg", apple: "/ampmheartwhite.png" },
+  // Favicon + apple icon are provided by app/favicon.ico, app/icon.jpg and app/apple-icon.jpg
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
