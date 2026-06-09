@@ -35,7 +35,7 @@ export default function BottomNav() {
 
   return (
     <>
-      {/* Trigger button */}
+      {/* Trigger button — Option A liquid-glass pill */}
       <button
         onClick={() => setOpen(true)}
         aria-label="Open menu"
@@ -45,14 +45,14 @@ export default function BottomNav() {
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 9999,
-          background: "rgba(255,255,255,0.15)",
-          backdropFilter: "blur(15px)",
-          WebkitBackdropFilter: "blur(15px)",
-          border: "1px solid rgba(255,255,255,0.3)",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.08))",
+          backdropFilter: "blur(20px) saturate(180%)",
+          WebkitBackdropFilter: "blur(20px) saturate(180%)",
+          border: "1px solid rgba(255,255,255,0.18)",
           borderRadius: "30px",
           padding: "16px 40px",
           cursor: "pointer",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.6)",
           opacity: hidden ? 0 : 1,
           pointerEvents: hidden ? "none" : "auto",
           transition: "all 0.3s ease",
@@ -63,7 +63,7 @@ export default function BottomNav() {
           fontSize: "18px",
           fontWeight: 600,
           textTransform: "uppercase",
-          letterSpacing: "2px",
+          letterSpacing: "3px",
           margin: 0,
         }}>
           MENU
@@ -97,42 +97,52 @@ export default function BottomNav() {
             }}
           />
 
-          {/* Glass card */}
+          {/* Glass card — Option B crystal panel */}
           <div
             style={{
               position: "relative",
-              background: "rgba(255,255,255,0.1)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              border: "1px solid rgba(255,255,255,0.2)",
-              borderRadius: "20px",
-              padding: "40px",
+              overflow: "hidden",
+              background: "rgba(255,255,255,0.05)",
+              backdropFilter: "blur(18px) saturate(160%)",
+              WebkitBackdropFilter: "blur(18px) saturate(160%)",
+              border: "1px solid rgba(255,255,255,0.35)",
+              borderRadius: "16px",
               minWidth: "300px",
-              maxWidth: "500px",
-              width: "90%",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)",
+              maxWidth: "440px",
+              width: "86%",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
             }}
           >
+            {/* Corner light-glow sheen */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                top: -50,
+                left: -50,
+                width: 220,
+                height: 220,
+                background: "radial-gradient(circle, rgba(255,255,255,0.35), transparent 70%)",
+                pointerEvents: "none",
+              }}
+            />
             <nav>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                {links.map((link) => {
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, position: "relative" }}>
+                {links.map((link, i) => {
                   const itemStyle: React.CSSProperties = {
                     display: "block",
-                    padding: "18px 24px",
+                    padding: "20px 28px",
                     color: "#ffffff",
                     textDecoration: "none",
-                    fontSize: "20px",
-                    fontWeight: 500,
+                    fontSize: "18px",
+                    fontWeight: 600,
                     textAlign: "center",
-                    borderRadius: "12px",
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.1)",
                     textTransform: "uppercase",
-                    letterSpacing: "2px",
-                    backdropFilter: "blur(10px)",
+                    letterSpacing: "3px",
+                    borderTop: i === 0 ? "none" : "1px solid rgba(255,255,255,0.12)",
                   };
                   return (
-                    <li key={link.label} style={{ marginBottom: "10px" }}>
+                    <li key={link.label}>
                       {link.external ? (
                         <a
                           href={link.href}
