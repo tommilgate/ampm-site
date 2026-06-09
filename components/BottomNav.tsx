@@ -45,14 +45,14 @@ export default function BottomNav() {
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 9999,
-          background: "rgba(6,6,8,0.62)",
-          backdropFilter: "blur(18px) saturate(120%)",
-          WebkitBackdropFilter: "blur(18px) saturate(120%)",
-          border: "1px solid rgba(255,255,255,0.16)",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.08))",
+          backdropFilter: "blur(20px) saturate(180%)",
+          WebkitBackdropFilter: "blur(20px) saturate(180%)",
+          border: "1px solid rgba(255,255,255,0.18)",
           borderRadius: "30px",
           padding: "16px 40px",
           cursor: "pointer",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.35)",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.6)",
           opacity: hidden ? 0 : 1,
           pointerEvents: hidden ? "none" : "auto",
           transition: "all 0.3s ease",
@@ -97,32 +97,32 @@ export default function BottomNav() {
             }}
           />
 
-          {/* Glass card — Onyx glossy black panel */}
+          {/* Glass card — Option B crystal panel */}
           <div
             style={{
               position: "relative",
               overflow: "hidden",
-              background: "rgba(6,6,8,0.62)",
-              backdropFilter: "blur(18px) saturate(120%)",
-              WebkitBackdropFilter: "blur(18px) saturate(120%)",
-              border: "1px solid rgba(255,255,255,0.16)",
+              background: "rgba(255,255,255,0.05)",
+              backdropFilter: "blur(18px) saturate(160%)",
+              WebkitBackdropFilter: "blur(18px) saturate(160%)",
+              border: "1px solid rgba(255,255,255,0.35)",
               borderRadius: "16px",
               minWidth: "300px",
               maxWidth: "440px",
               width: "86%",
-              boxShadow: "0 16px 44px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.35)",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
             }}
           >
-            {/* Glossy top specular sheen (piano finish) */}
+            {/* Corner light-glow sheen */}
             <div
               aria-hidden="true"
               style={{
                 position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                height: "45%",
-                background: "linear-gradient(180deg, rgba(255,255,255,0.14), transparent)",
+                top: -50,
+                left: -50,
+                width: 220,
+                height: 220,
+                background: "radial-gradient(circle, rgba(255,255,255,0.35), transparent 70%)",
                 pointerEvents: "none",
               }}
             />
@@ -139,7 +139,7 @@ export default function BottomNav() {
                     textAlign: "center",
                     textTransform: "uppercase",
                     letterSpacing: "3px",
-                    borderTop: i === 0 ? "none" : "1px solid rgba(255,255,255,0.08)",
+                    borderTop: i === 0 ? "none" : "1px solid rgba(255,255,255,0.12)",
                   };
                   return (
                     <li key={link.label}>
