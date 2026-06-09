@@ -61,7 +61,7 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
   return (
     <>
       <Link href="/events" className={cls} onClick={onClick}>Events</Link>
-      <Link href="/photos" className={cls} onClick={onClick}>Photos</Link>
+      <a href="https://www.ampmemonight.com/pages/photos" target="_blank" rel="noopener noreferrer" className={cls} onClick={onClick}>Photos</a>
       <a href="https://www.ampmemonight.com/collections/all" target="_blank" rel="noopener noreferrer" className={cls} onClick={onClick}>Merch</a>
     </>
   );

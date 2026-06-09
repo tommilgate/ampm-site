@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const links = [
   { label: "EVENTS", href: "/events" },
-  { label: "PHOTOS", href: "/photos" },
+  { label: "PHOTOS", href: "https://www.ampmemonight.com/pages/photos", external: true },
   { label: "MERCH", href: "https://www.ampmemonight.com/collections/all", external: true },
 ];
 
