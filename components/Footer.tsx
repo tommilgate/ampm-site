@@ -40,24 +40,25 @@ export default function Footer() {
   return (
     <footer
       style={{
-        // backdrop-filter inverts the fixed background texture BEHIND the footer
-        // (dark grain → light/cream), while our text on top stays dark. This is the
-        // Shopify effect — filter:invert only flips the footer's own pixels, which is wrong.
-        backdropFilter: "invert(1)",
-        WebkitBackdropFilter: "invert(1)",
-        padding: "48px 24px 64px",
+        // Footer has its OWN pre-inverted texture background that scrolls with it
+        // (like Shopify's Background_fix.png). This avoids backdrop-filter, which made
+        // the texture "swim" against the fixed hero background while scrolling.
+        backgroundImage: "url(/BACKGROUND_inverted.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        padding: "36px 24px 48px",
         textAlign: "center",
       }}
     >
       {/* Main tagline — serif (Tinos / Times) */}
       <p style={{
         fontFamily: "var(--font-tinos), 'Times New Roman', serif",
-        fontSize: "22px",
+        fontSize: "15px",
         fontWeight: 400,
         textTransform: "uppercase",
         letterSpacing: "0.5px",
         color: "#111",
-        margin: "0 0 6px",
+        margin: "0 0 4px",
         lineHeight: 1.2,
       }}>
         We throw parties for sad music
@@ -65,12 +66,12 @@ export default function Footer() {
       {/* Subtext — sans */}
       <p style={{
         fontFamily: "var(--font-jost), sans-serif",
-        fontSize: "13px",
+        fontSize: "10px",
         fontWeight: 500,
         textTransform: "uppercase",
         letterSpacing: "1px",
         color: "#333",
-        margin: "0 0 28px",
+        margin: "0 0 20px",
       }}>
         AM//PM is Australia&apos;s biggest touring emo night
       </p>
@@ -80,9 +81,9 @@ export default function Footer() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        gap: "18px",
+        gap: "16px",
         flexWrap: "wrap",
-        marginBottom: "28px",
+        marginBottom: "20px",
       }}>
         {socials.map((s) => (
           <a
@@ -91,7 +92,7 @@ export default function Footer() {
             target={s.href.startsWith("mailto") ? undefined : "_blank"}
             rel="noopener noreferrer"
             aria-label={s.label}
-            style={{ color: "#111", display: "flex", width: 28, height: 28 }}
+            style={{ color: "#111", display: "flex", width: 18, height: 18 }}
           >
             {s.svg}
           </a>
@@ -99,12 +100,12 @@ export default function Footer() {
       </div>
 
       {/* Copyright — sans */}
-      <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "13px", color: "#333", margin: "0 0 6px" }}>
+      <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "10px", letterSpacing: "0.5px", color: "#333", margin: "0 0 4px" }}>
         © 2024 AM//PM Emo Night, The Neighbourhood
       </p>
-      <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "13px", color: "#333", margin: 0 }}>
+      <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "10px", letterSpacing: "0.5px", color: "#333", margin: 0 }}>
         <a href="/privacy" style={{ color: "#333", textDecoration: "none" }}>Privacy Policy</a>
-        <span style={{ margin: "0 8px" }}>|</span>
+        <span style={{ margin: "0 6px" }}>|</span>
         <a href="/terms" style={{ color: "#333", textDecoration: "none" }}>Terms &amp; Conditions</a>
       </p>
     </footer>

@@ -8,7 +8,6 @@ export default function HeroVideo() {
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
-    // React sometimes drops the `muted` attribute; set it explicitly so autoplay works
     v.muted = true;
     const tryPlay = () => v.play().catch(() => {});
     tryPlay();
@@ -16,7 +15,18 @@ export default function HeroVideo() {
   }, []);
 
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-0 overflow-hidden">
+      {/* Texture sits behind the video, inside the hero (scrolls with it). */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: "url(/BACKGROUND_1.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
+      {/* Video blends against the texture above with screen mode. */}
       <video
         ref={ref}
         autoPlay
