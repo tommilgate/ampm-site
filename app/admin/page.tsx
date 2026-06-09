@@ -15,7 +15,7 @@ const labelStyle: React.CSSProperties = {
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; added?: string }>;
+  searchParams: Promise<{ error?: string; added?: string; updated?: string }>;
 }) {
   const authed = await isAuthed();
   const sp = await searchParams;
@@ -93,6 +93,7 @@ export default async function AdminPage({
         <h2 style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: 2, marginBottom: 14, color: "#888" }}>
           Current events ({events.length})
         </h2>
+        {sp.updated && <p style={{ color: "#4ade80", fontSize: 13, marginBottom: 12 }}>✓ Event updated.</p>}
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {events.map((e) => (
             <div key={e.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, background: "#0c0c0c", border: "1px solid #1e1e1e", borderRadius: 12, padding: "14px 16px", opacity: e.enabled ? 1 : 0.5 }}>
@@ -102,6 +103,9 @@ export default async function AdminPage({
                 <div style={{ fontSize: 12, color: "#999" }}>{e.venue}{e.supports ? ` · ${e.supports}` : ""}</div>
               </div>
               <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                <a href={`/admin/edit/${e.id}`} style={{ border: "1px solid #333", color: "#fff", padding: "7px 11px", borderRadius: 6, fontSize: 11, textTransform: "uppercase", letterSpacing: 1, whiteSpace: "nowrap", display: "inline-flex", alignItems: "center" }}>
+                  Edit
+                </a>
                 <form action={toggleEvent}>
                   <input type="hidden" name="id" value={e.id} />
                   <input type="hidden" name="enabled" value={String(e.enabled)} />

@@ -73,6 +73,43 @@ export async function addEvent(formData: FormData) {
   redirect("/admin?added=1");
 }
 
+export async function updateEvent(formData: FormData) {
+  requireAuth(await isAuthed());
+
+  const id = Number(formData.get("id"));
+  if (!id) redirect("/admin");
+
+  const get = (k: string) => {
+    const v = String(formData.get(k) ?? "").trim();
+    return v.length ? v : null;
+  };
+
+  const date = get("date");
+  const city = get("city");
+  const venue = get("venue");
+  if (!date || !city || !venue) redirect(`/admin/edit/${id}?error=missing`);
+
+  const orderRaw = get("order");
+
+  await prisma.event.update({
+    where: { id },
+    data: {
+      date: date!,
+      city: city!,
+      venue: venue!,
+      supports: get("supports"),
+      ticketsUrl: get("ticketsUrl"),
+      rsvpUrl: get("rsvpUrl"),
+      imageUrl: get("imageUrl"),
+      ...(orderRaw ? { order: Number(orderRaw) } : {}),
+    },
+  });
+
+  revalidatePath("/events");
+  revalidatePath("/admin");
+  redirect("/admin?updated=1");
+}
+
 export async function deleteEvent(formData: FormData) {
   requireAuth(await isAuthed());
   const id = Number(formData.get("id"));
