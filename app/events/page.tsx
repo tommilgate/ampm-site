@@ -27,7 +27,7 @@ export default async function EventsPage() {
         </Link>
       </header>
 
-      <main className="flex-1 w-full max-w-[480px] mx-auto px-4 pt-3 pb-36">
+      <main className="flex-1 w-full max-w-[480px] mx-auto px-4 pt-3 pb-12">
         {/* Page hero image — optimized via next/image with intrinsic dimensions (no layout shift) */}
         {hero && hero.width && hero.height ? (
           <Image

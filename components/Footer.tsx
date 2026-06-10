@@ -58,8 +58,7 @@ export default function Footer({ dark = false }: { dark?: boolean }) {
               backgroundSize: "cover",
               backgroundPosition: "center",
             }),
-        // extra bottom padding in dark mode (events page) so the floating MENU clears the text
-        padding: dark ? "22px 24px 96px" : "22px 24px 24px",
+        padding: "22px 24px 24px",
         textAlign: "center",
       }}
     >

@@ -11,7 +11,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         </Link>
       </header>
 
-      <main className="flex-1 w-full max-w-[720px] mx-auto px-5 pt-6 pb-40">
+      <main className="flex-1 w-full max-w-[720px] mx-auto px-5 pt-6 pb-14">
         <div className="legal">{children}</div>
       </main>
 

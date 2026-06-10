@@ -34,6 +34,14 @@ export default function BottomNav({ persistent = false }: { persistent?: boolean
     }, CLOSE_MS);
   }, []);
 
+  // Open must cancel any in-flight close, otherwise a pending close timer
+  // immediately shuts a freshly-opened menu (the "click twice" bug).
+  const openMenu = useCallback(() => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setClosing(false);
+    setOpen(true);
+  }, []);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
     document.addEventListener("keydown", onKey);
@@ -43,15 +51,14 @@ export default function BottomNav({ persistent = false }: { persistent?: boolean
     };
   }, [close]);
 
-  // On the homepage the floating MENU fades out once you scroll past the hero so it
-  // never overlaps the footer. On inner pages (persistent) it stays visible.
+  // The floating MENU fades out once you scroll down, on every page,
+  // so it never sits over content/footer mid-scroll.
   useEffect(() => {
-    if (persistent) return;
     const onScroll = () => setHidden(window.scrollY > 60);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [persistent]);
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -64,7 +71,7 @@ export default function BottomNav({ persistent = false }: { persistent?: boolean
       <button
         id="nav-menu-trigger"
         className="menu-pill"
-        onClick={() => setOpen(true)}
+        onClick={openMenu}
         aria-label="Open menu"
         aria-expanded={open}
         style={{
@@ -85,7 +92,7 @@ export default function BottomNav({ persistent = false }: { persistent?: boolean
         </span>
       </button>
 
-      {/* Popup overlay */}
+      {/* Popup overlay — click-through while closing so the pill is immediately tappable */}
       {open && (
         <div
           style={{
@@ -96,6 +103,7 @@ export default function BottomNav({ persistent = false }: { persistent?: boolean
             alignItems: "flex-end",
             justifyContent: "center",
             paddingBottom: "8%",
+            pointerEvents: closing ? "none" : "auto",
           }}
         >
           {/* Backdrop */}

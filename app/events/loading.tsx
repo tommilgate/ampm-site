@@ -7,7 +7,7 @@ export default function EventsLoading() {
         <Image src="/ampmheartwhite.png" alt="AM//PM" width={30} height={30} className="object-contain" priority />
       </header>
 
-      <main className="flex-1 w-full max-w-[480px] mx-auto px-4 pt-3 pb-36">
+      <main className="flex-1 w-full max-w-[480px] mx-auto px-4 pt-3 pb-12">
         {/* Hero placeholder — square, matching the real hero so layout doesn't jump */}
         <div className="skeleton" style={{ width: "100%", aspectRatio: "1 / 1", borderRadius: 14, marginBottom: 18 }} />
         <div className="flex flex-col gap-3">
