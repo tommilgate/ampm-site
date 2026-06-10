@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { isAuthed, login, logout, addEvent, getSetting, uploadHero, removeHero } from "./actions";
+import { isAuthed, login, logout, addEvent, getHero, uploadHero, removeHero } from "./actions";
 import AdminEventsList from "@/components/AdminEventsList";
 
 export const dynamic = "force-dynamic";
@@ -38,7 +38,7 @@ export default async function AdminPage({
   }
 
   const events = await prisma.event.findMany({ orderBy: { order: "asc" } });
-  const heroUrl = await getSetting("eventsHeroUrl");
+  const heroUrl = (await getHero())?.url ?? null;
 
   // Per-event click counts (first-party tracking)
   const clickGroups = await prisma.click.groupBy({ by: ["eventId", "kind"], _count: { _all: true } });

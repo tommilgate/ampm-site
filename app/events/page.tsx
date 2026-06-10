@@ -4,19 +4,19 @@ import BottomNav from "@/components/BottomNav";
 import Footer from "@/components/Footer";
 import TrackedLink from "@/components/TrackedLink";
 import { prisma } from "@/lib/prisma";
-import { getSetting } from "@/app/admin/actions";
+import { getHero } from "@/app/admin/actions";
 
 // Cached/ISR: served instantly from cache. The admin actions call revalidatePath("/events")
 // on every add/edit/delete/reorder/hero change, so it regenerates with fresh data on edits.
-// The 300s window is a self-healing fallback.
-export const revalidate = 300;
+// The 1h window is only a self-healing fallback — explicit revalidation keeps it current.
+export const revalidate = 3600;
 
 export default async function EventsPage() {
   const events = await prisma.event.findMany({
     where: { enabled: true },
     orderBy: { order: "asc" },
   });
-  const heroUrl = await getSetting("eventsHeroUrl");
+  const hero = await getHero();
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#000" }}>
@@ -28,15 +28,28 @@ export default async function EventsPage() {
       </header>
 
       <main className="flex-1 w-full max-w-[480px] mx-auto px-4 pt-3 pb-36">
-        {/* Page hero image */}
-        {heroUrl && (
+        {/* Page hero image — optimized via next/image with intrinsic dimensions (no layout shift) */}
+        {hero && hero.width && hero.height ? (
+          <Image
+            src={hero.url}
+            alt="AM//PM Emo Night"
+            width={hero.width}
+            height={hero.height}
+            priority
+            sizes="(max-width: 512px) 100vw, 480px"
+            className="anim-fade-up"
+            style={{ width: "100%", height: "auto", borderRadius: 14, display: "block", marginBottom: 18 }}
+          />
+        ) : hero ? (
+          // Fallback for legacy hero values without stored dimensions
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={heroUrl}
+            src={hero.url}
             alt="AM//PM Emo Night"
+            className="anim-fade-up"
             style={{ width: "100%", borderRadius: 14, display: "block", marginBottom: 18 }}
           />
-        )}
+        ) : null}
 
         {events.length === 0 ? (
           <p className="text-center text-white/40 uppercase tracking-widest text-xs py-20">
@@ -44,14 +57,17 @@ export default async function EventsPage() {
           </p>
         ) : (
           <div className="flex flex-col gap-3">
-            {events.map((event) => (
+            {events.map((event, i) => (
               <article
                 key={event.id}
+                className="anim-fade-up"
                 style={{
                   background: "#0d0d0d",
                   border: "1px solid rgba(255,255,255,0.07)",
                   borderRadius: 14,
                   padding: 12,
+                  // Staggered entrance, capped so long lists don't crawl
+                  animationDelay: `${80 + Math.min(i, 6) * 70}ms`,
                 }}
               >
                 {/* Date bar */}

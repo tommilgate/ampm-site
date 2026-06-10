@@ -11,5 +11,7 @@ export default function SeekaTracking() {
   const pathname = usePathname();
   if (pathname?.startsWith("/admin")) return null;
 
-  return <Script src="/seeka.js" strategy="afterInteractive" />;
+  // lazyOnload: starts after hydration, so Seeka's DOM tagging (data-sk-view-layout-binded)
+  // can't race React and trigger hydration mismatches.
+  return <Script src="/seeka.js" strategy="lazyOnload" />;
 }

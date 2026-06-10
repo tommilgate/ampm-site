@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const links = [
   { label: "EVENTS", href: "/events" },
@@ -9,15 +10,38 @@ const links = [
   { label: "MERCH", href: "https://ampmemonight.shop/collections/all", external: true },
 ];
 
+const CLOSE_MS = 180;
+
 export default function BottomNav({ persistent = false }: { persistent?: boolean }) {
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const router = useRouter();
+
+  // Prefetch the events route so tapping EVENTS is instant.
+  useEffect(() => {
+    router.prefetch("/events");
+  }, [router]);
+
+  // Animated close: play the out animation, then unmount.
+  const close = useCallback(() => {
+    setClosing(true);
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => {
+      setOpen(false);
+      setClosing(false);
+    }, CLOSE_MS);
+  }, []);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, []);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      if (closeTimer.current) clearTimeout(closeTimer.current);
+    };
+  }, [close]);
 
   // On the homepage the floating MENU fades out once you scroll past the hero so it
   // never overlaps the footer. On inner pages (persistent) it stays visible.
@@ -36,28 +60,17 @@ export default function BottomNav({ persistent = false }: { persistent?: boolean
 
   return (
     <>
-      {/* Trigger button — Option A liquid-glass pill */}
+      {/* Trigger button — liquid-glass pill */}
       <button
         id="nav-menu-trigger"
+        className="menu-pill"
         onClick={() => setOpen(true)}
         aria-label="Open menu"
+        aria-expanded={open}
         style={{
-          position: "fixed",
           bottom: persistent ? "24px" : "15%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 9999,
-          background: "linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.08))",
-          backdropFilter: "blur(20px) saturate(180%)",
-          WebkitBackdropFilter: "blur(20px) saturate(180%)",
-          border: "1px solid rgba(255,255,255,0.18)",
-          borderRadius: "30px",
-          padding: "16px 40px",
-          cursor: "pointer",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.6)",
           opacity: hidden ? 0 : 1,
           pointerEvents: hidden ? "none" : "auto",
-          transition: "all 0.3s ease",
         }}
       >
         <span style={{
@@ -83,13 +96,12 @@ export default function BottomNav({ persistent = false }: { persistent?: boolean
             alignItems: "flex-end",
             justifyContent: "center",
             paddingBottom: "8%",
-            opacity: 1,
-            transition: "opacity 0.3s ease",
           }}
         >
           {/* Backdrop */}
           <div
-            onClick={() => setOpen(false)}
+            className={`menu-backdrop${closing ? " closing" : ""}`}
+            onClick={close}
             style={{
               position: "absolute",
               inset: 0,
@@ -99,8 +111,9 @@ export default function BottomNav({ persistent = false }: { persistent?: boolean
             }}
           />
 
-          {/* Glass card — Option B crystal panel */}
+          {/* Glass card — crystal panel */}
           <div
+            className={`menu-card${closing ? " closing" : ""}`}
             style={{
               position: "relative",
               overflow: "hidden",
@@ -149,20 +162,22 @@ export default function BottomNav({ persistent = false }: { persistent?: boolean
                       {link.external ? (
                         <a
                           id={linkId}
+                          className="menu-row"
                           href={link.href}
                           target="_blank"
                           rel="noopener noreferrer"
                           style={itemStyle}
-                          onClick={() => setOpen(false)}
+                          onClick={close}
                         >
                           {link.label}
                         </a>
                       ) : (
                         <Link
                           id={linkId}
+                          className="menu-row"
                           href={link.href}
                           style={itemStyle}
-                          onClick={() => setOpen(false)}
+                          onClick={close}
                         >
                           {link.label}
                         </Link>

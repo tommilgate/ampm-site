@@ -25,6 +25,67 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.05em;
 }
 
+/* ---- Entrance animations ---- */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+.anim-fade-up {
+  animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ---- Glass menu: pill trigger ---- */
+.menu-pill {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 30px;
+  padding: 16px 40px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: opacity 0.3s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+}
+.menu-pill:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.menu-pill:active {
+  transform: translateX(-50%) scale(0.94);
+  transition-duration: 0.08s;
+}
+
+/* ---- Glass menu: popup open/close ---- */
+@keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes menu-pop-in {
+  from { opacity: 0; transform: scale(0.92) translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes menu-pop-out {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: scale(0.95) translateY(10px); }
+}
+.menu-backdrop { animation: backdrop-in 0.25s ease both; }
+.menu-backdrop.closing { animation: backdrop-out 0.18s ease both; }
+.menu-card { animation: menu-pop-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.menu-card.closing { animation: menu-pop-out 0.18s ease both; }
+
+/* Menu rows: subtle press feedback */
+.menu-row { transition: background-color 0.15s ease; }
+.menu-row:active { background-color: rgba(255, 255, 255, 0.1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade-up, .menu-card, .menu-backdrop, .menu-card.closing, .menu-backdrop.closing {
+    animation-duration: 0.01ms !important;
+  }
+  .menu-pill, .menu-row { transition: none; }
+}
+
 /* Skeleton loading shimmer */
 @keyframes ampm-pulse {
   0%, 100% { opacity: 0.35; }

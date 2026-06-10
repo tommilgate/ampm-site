@@ -45,22 +45,56 @@ export async function getSetting(key: string): Promise<string | null> {
   return s?.value ?? null;
 }
 
+export type HeroImage = { url: string; width: number | null; height: number | null };
+
+// Hero is stored as JSON {url,width,height} so the page can render it with
+// fixed dimensions (no layout shift) and next/image can optimize it.
+export async function getHero(): Promise<HeroImage | null> {
+  const s = await prisma.setting.findUnique({ where: { key: "eventsHeroUrl" } });
+  if (!s?.value) return null;
+  if (s.value.startsWith("{")) {
+    try {
+      const parsed = JSON.parse(s.value) as HeroImage;
+      return parsed?.url ? parsed : null;
+    } catch {
+      return null;
+    }
+  }
+  // legacy plain-URL value
+  return { url: s.value, width: null, height: null };
+}
+
 export async function uploadHero(formData: FormData) {
   requireAuth(await isAuthed());
   const file = formData.get("file") as File | null;
   if (!file || file.size === 0) redirect("/admin?error=nofile");
 
+  const buffer = Buffer.from(await file!.arrayBuffer());
+
+  // Read intrinsic dimensions so the events page can reserve space (zero CLS)
+  let width: number | null = null;
+  let height: number | null = null;
+  try {
+    const { imageSize } = await import("image-size");
+    const dim = imageSize(buffer);
+    width = dim.width ?? null;
+    height = dim.height ?? null;
+  } catch {
+    /* dimensions unknown — page falls back to fluid img */
+  }
+
   const { put } = await import("@vercel/blob");
   const ext = (file!.name.split(".").pop() || "jpg").toLowerCase();
-  const blob = await put(`events-hero-${Date.now()}.${ext}`, file!, {
+  const blob = await put(`events-hero-${Date.now()}.${ext}`, buffer, {
     access: "public",
     addRandomSuffix: true,
   });
 
+  const value = JSON.stringify({ url: blob.url, width, height });
   await prisma.setting.upsert({
     where: { key: "eventsHeroUrl" },
-    update: { value: blob.url },
-    create: { key: "eventsHeroUrl", value: blob.url },
+    update: { value },
+    create: { key: "eventsHeroUrl", value },
   });
 
   revalidatePath("/events");
