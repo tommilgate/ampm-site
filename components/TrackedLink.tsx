@@ -1,8 +1,57 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 type ConvergeWindow = Window & {
   Converge?: { track?: { custom?: (name: string, props?: Record<string, unknown>) => void } };
 };
+
+function readCookie(name: string): string {
+  if (typeof document === "undefined") return "";
+  const m = document.cookie.match(
+    new RegExp("(?:^|; )" + name.replace(/([.$?*|{}()[\]\\/+^])/g, "\\$1") + "=([^;]*)")
+  );
+  return m ? decodeURIComponent(m[1]) : "";
+}
+
+// Carry Meta / UTM click identifiers onto an outbound (cross-domain) ticket link
+// so Oztix + Seeka can attach them to the Purchase event. Without this, the
+// Facebook click id (fbc) is lost at the domain handoff and Meta can't do
+// click-through attribution — which is the whole reason attribution looked broken.
+function withClickIds(rawHref: string): string {
+  try {
+    const url = new URL(rawHref, window.location.href);
+    // Only touch cross-origin links (e.g. tickets.oztix.com.au) — internal links don't need it.
+    if (url.origin === window.location.origin) return rawHref;
+
+    const here = new URLSearchParams(window.location.search);
+
+    // Pass through UTMs + platform click ids that are on the current page URL.
+    for (const k of [
+      "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term",
+      "fbclid", "gclid", "ttclid",
+    ]) {
+      const v = here.get(k);
+      if (v && !url.searchParams.has(k)) url.searchParams.set(k, v);
+    }
+
+    // Meta click cookie (_fbc): persists ~90 days, set by the pixel from the fbclid.
+    // This is what survives "saw ad → came back later on the same device". If the
+    // cookie isn't set yet, build a valid fbc from a fresh fbclid in the URL.
+    let fbc = readCookie("_fbc");
+    const fbclid = here.get("fbclid");
+    if (!fbc && fbclid) fbc = `fb.1.${Date.now()}.${fbclid}`;
+    if (fbc && !url.searchParams.has("fbc")) url.searchParams.set("fbc", fbc);
+
+    // Meta browser cookie (_fbp) — helps match even without a click id.
+    const fbp = readCookie("_fbp");
+    if (fbp && !url.searchParams.has("fbp")) url.searchParams.set("fbp", fbp);
+
+    return url.toString();
+  } catch {
+    return rawHref;
+  }
+}
 
 export default function TrackedLink({
   event,
@@ -17,7 +66,22 @@ export default function TrackedLink({
   eventId?: number;
   kind?: string;
 } & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
-  const onClick = () => {
+  // Start with the raw href (SSR-safe), then augment on the client once cookies
+  // and URL params are available. Falls back to raw href if anything goes wrong.
+  const [href, setHref] = useState(anchorProps.href);
+  useEffect(() => {
+    if (anchorProps.href) setHref(withClickIds(anchorProps.href));
+  }, [anchorProps.href]);
+
+  const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // Belt-and-suspenders: re-augment at click time in case the pixel set _fbc
+    // after mount. Idempotent — won't double-append.
+    try {
+      const a = e.currentTarget;
+      if (a.href) a.href = withClickIds(a.href);
+    } catch {
+      /* ignore */
+    }
     // 1) Fire to Seeka (feeds Seeka → ampm-insights + any connected pixels)
     try {
       const w = window as ConvergeWindow;
@@ -40,7 +104,7 @@ export default function TrackedLink({
   };
 
   return (
-    <a {...anchorProps} onClick={onClick}>
+    <a {...anchorProps} href={href} onClick={onClick}>
       {children}
     </a>
   );
