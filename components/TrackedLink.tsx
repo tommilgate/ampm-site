@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { TRACKED_PARAMS, saveTrackedParams, loadTrackedParams } from "@/lib/attribution";
 
 type ConvergeWindow = Window & {
   Converge?: { track?: { custom?: (name: string, props?: Record<string, unknown>) => void } };
@@ -25,13 +26,12 @@ function withClickIds(rawHref: string): string {
     if (url.origin === window.location.origin) return rawHref;
 
     const here = new URLSearchParams(window.location.search);
+    const stored = loadTrackedParams();
 
-    // Pass through UTMs + platform click ids that are on the current page URL.
-    for (const k of [
-      "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term",
-      "fbclid", "gclid", "ttclid",
-    ]) {
-      const v = here.get(k);
+    // Pass through UTMs + platform click ids — current URL first, then the
+    // first-touch values saved when the visitor originally landed.
+    for (const k of TRACKED_PARAMS) {
+      const v = here.get(k) || stored[k];
       if (v && !url.searchParams.has(k)) url.searchParams.set(k, v);
     }
 
@@ -39,7 +39,7 @@ function withClickIds(rawHref: string): string {
     // This is what survives "saw ad → came back later on the same device". If the
     // cookie isn't set yet, build a valid fbc from a fresh fbclid in the URL.
     let fbc = readCookie("_fbc");
-    const fbclid = here.get("fbclid");
+    const fbclid = here.get("fbclid") || stored["fbclid"];
     if (!fbc && fbclid) fbc = `fb.1.${Date.now()}.${fbclid}`;
     if (fbc && !url.searchParams.has("fbc")) url.searchParams.set("fbc", fbc);
 
@@ -70,6 +70,7 @@ export default function TrackedLink({
   // and URL params are available. Falls back to raw href if anything goes wrong.
   const [href, setHref] = useState(anchorProps.href);
   useEffect(() => {
+    saveTrackedParams(); // capture first-touch UTMs/click ids before they're lost to internal nav
     if (anchorProps.href) setHref(withClickIds(anchorProps.href));
   }, [anchorProps.href]);
 
