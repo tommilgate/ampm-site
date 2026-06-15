@@ -9,7 +9,8 @@ datasource db {
 
 model Event {
   id        Int      @id @default(autoincrement())
-  date      String
+  date      String   // display text, e.g. "SATURDAY JUNE 13TH"
+  startDate DateTime? // real calendar date — used for sorting + auto-hiding past events
   city      String
   venue     String
   supports  String?

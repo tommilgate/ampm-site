@@ -26,6 +26,7 @@ export type AdminEvent = {
   venue: string;
   supports: string | null;
   enabled: boolean;
+  past: boolean;
   ticketClicks: number;
   rsvpClicks: number;
 };
@@ -37,7 +38,7 @@ function Row({ ev }: { ev: AdminEvent }) {
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.4 : ev.enabled ? 1 : 0.5,
+    opacity: isDragging ? 0.4 : ev.enabled && !ev.past ? 1 : 0.5,
     display: "flex",
     alignItems: "center",
     gap: 12,
@@ -61,7 +62,14 @@ function Row({ ev }: { ev: AdminEvent }) {
       </button>
 
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 11, color: "#fe5859", letterSpacing: 1, textTransform: "uppercase" }}>{ev.date}</div>
+        <div style={{ fontSize: 11, color: "#fe5859", letterSpacing: 1, textTransform: "uppercase" }}>
+          {ev.date}
+          {ev.past && (
+            <span style={{ marginLeft: 8, color: "#888", border: "1px solid #444", borderRadius: 4, padding: "1px 6px", fontSize: 10 }}>
+              PAST · hidden from site
+            </span>
+          )}
+        </div>
         <div style={{ fontSize: 15, fontWeight: 700, textTransform: "uppercase" }}>{ev.city}</div>
         <div style={{ fontSize: 12, color: "#999" }}>{ev.venue}{ev.supports ? ` · ${ev.supports}` : ""}</div>
         <div style={{ fontSize: 11, color: "#fe5859", marginTop: 4, letterSpacing: 0.5 }}>

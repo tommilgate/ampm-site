@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { isAuthed, login, logout, addEvent, getHero, uploadHero, removeHero } from "./actions";
 import AdminEventsList from "@/components/AdminEventsList";
+import { isPast } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
 
@@ -95,9 +96,13 @@ export default async function AdminPage({
           <h2 style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: 2, marginBottom: 18, color: "#fe5859" }}>Add an event</h2>
           {sp.added && <p style={{ color: "#4ade80", fontSize: 13, marginBottom: 14 }}>✓ Event added.</p>}
           <form id="admin-add-event-form" action={addEvent} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-            <div style={{ gridColumn: "1 / -1" }}>
-              <label style={labelStyle}>Date *</label>
+            <div>
+              <label style={labelStyle}>Date label *</label>
               <input id="admin-add-event-date" name="date" placeholder="SATURDAY JUNE 13TH" style={inputStyle} required />
+            </div>
+            <div>
+              <label style={labelStyle}>Event date * (auto-hides when past)</label>
+              <input id="admin-add-event-startdate" name="startDate" type="date" style={inputStyle} required />
             </div>
             <div>
               <label style={labelStyle}>City / Title *</label>
@@ -135,6 +140,7 @@ export default async function AdminPage({
         <AdminEventsList
           initial={events.map((e) => ({
             id: e.id, date: e.date, city: e.city, venue: e.venue, supports: e.supports, enabled: e.enabled,
+            past: isPast(e.startDate),
             ticketClicks: clicksByEvent[e.id]?.ticket ?? 0,
             rsvpClicks: clicksByEvent[e.id]?.rsvp ?? 0,
           }))}

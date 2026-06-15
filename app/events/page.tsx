@@ -5,15 +5,21 @@ import Footer from "@/components/Footer";
 import TrackedLink from "@/components/TrackedLink";
 import { prisma } from "@/lib/prisma";
 import { getHero } from "@/app/admin/actions";
+import { auTodayCutoff } from "@/lib/dates";
 
-// Cached/ISR: served instantly from cache. The admin actions call revalidatePath("/events")
-// on every add/edit/delete/reorder/hero change, so it regenerates with fresh data on edits.
-// The 1h window is only a self-healing fallback — explicit revalidation keeps it current.
+// Cached/ISR: regenerated hourly (and on every admin edit via revalidatePath). The 1h
+// window also re-evaluates the "past event" cutoff, so events drop off within an hour
+// of their day ending.
 export const revalidate = 3600;
 
 export default async function EventsPage() {
+  const cutoff = auTodayCutoff();
   const events = await prisma.event.findMany({
-    where: { enabled: true },
+    where: {
+      enabled: true,
+      // Hide past events; events with no date set always show (legacy safety).
+      OR: [{ startDate: null }, { startDate: { gte: cutoff } }],
+    },
     orderBy: { order: "asc" },
   });
   const hero = await getHero();

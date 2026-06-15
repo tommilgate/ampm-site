@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { isAuthed, updateEvent } from "../../actions";
+import { toDateInputValue } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
 
@@ -36,9 +37,13 @@ export default async function EditEventPage({
         <form id="admin-edit-event-form" action={updateEvent} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, background: "#0c0c0c", border: "1px solid #1e1e1e", borderRadius: 14, padding: 22 }}>
           <input type="hidden" name="id" value={event.id} />
 
-          <div style={{ gridColumn: "1 / -1" }}>
-            <label style={labelStyle}>Date *</label>
+          <div>
+            <label style={labelStyle}>Date label *</label>
             <input id="admin-edit-event-date" name="date" defaultValue={event.date} style={inputStyle} required />
+          </div>
+          <div>
+            <label style={labelStyle}>Event date * (auto-hides when past)</label>
+            <input id="admin-edit-event-startdate" name="startDate" type="date" defaultValue={toDateInputValue(event.startDate)} style={inputStyle} required />
           </div>
           <div>
             <label style={labelStyle}>City / Title *</label>

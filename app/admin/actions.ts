@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { parseDateInput } from "@/lib/dates";
 
 const COOKIE = "ampm_admin";
 
@@ -141,6 +142,7 @@ export async function addEvent(formData: FormData) {
   await prisma.event.create({
     data: {
       date: date!,
+      startDate: parseDateInput(get("startDate")),
       city: city!,
       venue: venue!,
       supports: get("supports"),
@@ -178,6 +180,7 @@ export async function updateEvent(formData: FormData) {
     where: { id },
     data: {
       date: date!,
+      startDate: parseDateInput(get("startDate")),
       city: city!,
       venue: venue!,
       supports: get("supports"),
