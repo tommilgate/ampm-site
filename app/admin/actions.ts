@@ -65,42 +65,21 @@ export async function getHero(): Promise<HeroImage | null> {
   return { url: s.value, width: null, height: null };
 }
 
-export async function uploadHero(formData: FormData) {
+// Called by the client AFTER it uploads the file directly to Vercel Blob.
+// (Direct browser→Blob upload avoids the 1MB server-action / 4.5MB function limits.)
+export async function saveHeroUrl(url: string, width: number | null, height: number | null) {
   requireAuth(await isAuthed());
-  const file = formData.get("file") as File | null;
-  if (!file || file.size === 0) redirect("/admin?error=nofile");
-
-  const buffer = Buffer.from(await file!.arrayBuffer());
-
-  // Read intrinsic dimensions so the events page can reserve space (zero CLS)
-  let width: number | null = null;
-  let height: number | null = null;
-  try {
-    const { imageSize } = await import("image-size");
-    const dim = imageSize(buffer);
-    width = dim.width ?? null;
-    height = dim.height ?? null;
-  } catch {
-    /* dimensions unknown — page falls back to fluid img */
+  if (!url || !/^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\//.test(url)) {
+    throw new Error("Invalid upload URL");
   }
-
-  const { put } = await import("@vercel/blob");
-  const ext = (file!.name.split(".").pop() || "jpg").toLowerCase();
-  const blob = await put(`events-hero-${Date.now()}.${ext}`, buffer, {
-    access: "public",
-    addRandomSuffix: true,
-  });
-
-  const value = JSON.stringify({ url: blob.url, width, height });
+  const value = JSON.stringify({ url, width, height });
   await prisma.setting.upsert({
     where: { key: "eventsHeroUrl" },
     update: { value },
     create: { key: "eventsHeroUrl", value },
   });
-
   revalidatePath("/events");
   revalidatePath("/admin");
-  redirect("/admin?hero=1");
 }
 
 export async function removeHero() {

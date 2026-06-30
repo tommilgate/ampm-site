@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
-import { isAuthed, login, logout, addEvent, getHero, uploadHero, removeHero } from "./actions";
+import { isAuthed, login, logout, addEvent, getHero, removeHero } from "./actions";
 import AdminEventsList from "@/components/AdminEventsList";
+import HeroUploader from "@/components/HeroUploader";
 import { isPast } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
@@ -75,12 +76,7 @@ export default async function AdminPage({
           )}
 
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-            <form id="admin-hero-upload-form" action={uploadHero} style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-              <input id="admin-hero-file" type="file" name="file" accept="image/*" required style={{ color: "#ccc", fontSize: 13 }} />
-              <button id="admin-hero-upload-submit" type="submit" style={{ padding: "10px 20px", borderRadius: 8, background: "#fe5859", color: "#fff", fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, fontSize: 12, border: "none", cursor: "pointer" }}>
-                {heroUrl ? "Replace" : "Upload"}
-              </button>
-            </form>
+            <HeroUploader hasHero={!!heroUrl} />
             {heroUrl && (
               <form id="admin-hero-remove-form" action={removeHero}>
                 <button id="admin-hero-remove-submit" type="submit" style={{ padding: "10px 16px", borderRadius: 8, background: "none", border: "1px solid #4a1f1f", color: "#fe5859", fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, fontSize: 12, cursor: "pointer" }}>
