@@ -4,8 +4,9 @@ import BottomNav from "@/components/BottomNav";
 import Footer from "@/components/Footer";
 import TrackedLink from "@/components/TrackedLink";
 import { prisma } from "@/lib/prisma";
-import { getHero } from "@/app/admin/actions";
+import { getHero, getButtonColor } from "@/app/admin/actions";
 import { auTodayCutoff } from "@/lib/dates";
+import { normalizeHex, contrastText } from "@/lib/color";
 
 // Cached/ISR: regenerated hourly (and on every admin edit via revalidatePath). The 1h
 // window also re-evaluates the "past event" cutoff, so events drop off within an hour
@@ -23,6 +24,8 @@ export default async function EventsPage() {
     orderBy: { order: "asc" },
   });
   const hero = await getHero();
+  const btnColor = normalizeHex(await getButtonColor());
+  const btnText = contrastText(btnColor);
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#000" }}>
@@ -144,8 +147,8 @@ export default async function EventsPage() {
                             rel="noopener noreferrer"
                             style={{
                               fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase",
-                              color: "#fff", padding: "10px 14px", borderRadius: 7,
-                              border: "1px solid rgba(255,255,255,0.25)", whiteSpace: "nowrap",
+                              color: btnColor, padding: "10px 14px", borderRadius: 7,
+                              border: `1px solid ${btnColor}`, whiteSpace: "nowrap",
                             }}
                           >
                             RSVP
@@ -163,8 +166,8 @@ export default async function EventsPage() {
                             rel="noopener noreferrer"
                             style={{
                               fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase",
-                              color: "#fff", padding: "10px 18px", borderRadius: 7,
-                              background: "var(--color-accent)", whiteSpace: "nowrap",
+                              color: btnText, padding: "10px 18px", borderRadius: 7,
+                              background: btnColor, whiteSpace: "nowrap",
                             }}
                           >
                             Tickets

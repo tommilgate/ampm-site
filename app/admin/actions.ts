@@ -82,6 +82,26 @@ export async function saveHeroUrl(url: string, width: number | null, height: num
   revalidatePath("/admin");
 }
 
+// ---- Button colour (events page CTAs) ----
+
+export async function getButtonColor(): Promise<string | null> {
+  const s = await prisma.setting.findUnique({ where: { key: "buttonColor" } });
+  return s?.value ?? null;
+}
+
+export async function saveButtonColor(hex: string) {
+  requireAuth(await isAuthed());
+  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) throw new Error("Invalid colour");
+  const value = hex.toLowerCase();
+  await prisma.setting.upsert({
+    where: { key: "buttonColor" },
+    update: { value },
+    create: { key: "buttonColor", value },
+  });
+  revalidatePath("/events");
+  revalidatePath("/admin");
+}
+
 export async function removeHero() {
   requireAuth(await isAuthed());
   await prisma.setting.deleteMany({ where: { key: "eventsHeroUrl" } });

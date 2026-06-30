@@ -1,8 +1,10 @@
 import { prisma } from "@/lib/prisma";
-import { isAuthed, login, logout, addEvent, getHero, removeHero } from "./actions";
+import { isAuthed, login, logout, addEvent, getHero, getButtonColor, removeHero } from "./actions";
 import AdminEventsList from "@/components/AdminEventsList";
 import HeroUploader from "@/components/HeroUploader";
+import ButtonColorPicker from "@/components/ButtonColorPicker";
 import { isPast } from "@/lib/dates";
+import { DEFAULT_BUTTON_COLOR, normalizeHex } from "@/lib/color";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +43,7 @@ export default async function AdminPage({
 
   const events = await prisma.event.findMany({ orderBy: { order: "asc" } });
   const heroUrl = (await getHero())?.url ?? null;
+  const buttonColor = normalizeHex(await getButtonColor());
 
   // Per-event click counts (first-party tracking)
   const clickGroups = await prisma.click.groupBy({ by: ["eventId", "kind"], _count: { _all: true } });
@@ -85,6 +88,13 @@ export default async function AdminPage({
               </form>
             )}
           </div>
+        </section>
+
+        {/* Button colour */}
+        <section style={{ background: "#0c0c0c", border: "1px solid #1e1e1e", borderRadius: 14, padding: 22, marginBottom: 24 }}>
+          <h2 style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: 2, marginBottom: 6, color: "#fe5859" }}>Button colour</h2>
+          <p style={{ color: "#888", fontSize: 12, marginBottom: 16 }}>Colour of the Tickets / RSVP buttons on the events page — set it to match your artwork. Text colour auto-adjusts for readability.</p>
+          <ButtonColorPicker initial={buttonColor} />
         </section>
 
         {/* Add event form */}
