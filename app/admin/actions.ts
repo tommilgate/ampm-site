@@ -149,6 +149,7 @@ export async function addEvent(formData: FormData) {
       ticketsUrl: get("ticketsUrl"),
       rsvpUrl: get("rsvpUrl"),
       imageUrl: get("imageUrl"),
+      soldOut: formData.get("soldOut") != null,
       order,
     },
   });
@@ -187,6 +188,7 @@ export async function updateEvent(formData: FormData) {
       ticketsUrl: get("ticketsUrl"),
       rsvpUrl: get("rsvpUrl"),
       imageUrl: get("imageUrl"),
+      soldOut: formData.get("soldOut") != null,
       ...(orderRaw ? { order: Number(orderRaw) } : {}),
     },
   });
@@ -213,6 +215,18 @@ export async function toggleEvent(formData: FormData) {
   const enabled = formData.get("enabled") === "true";
   if (id) {
     await prisma.event.update({ where: { id }, data: { enabled: !enabled } });
+    revalidatePath("/events");
+    revalidatePath("/admin");
+  }
+  redirect("/admin");
+}
+
+export async function toggleSoldOut(formData: FormData) {
+  requireAuth(await isAuthed());
+  const id = Number(formData.get("id"));
+  const soldOut = formData.get("soldOut") === "true";
+  if (id) {
+    await prisma.event.update({ where: { id }, data: { soldOut: !soldOut } });
     revalidatePath("/events");
     revalidatePath("/admin");
   }

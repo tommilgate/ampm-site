@@ -119,43 +119,58 @@ export default async function EventsPage() {
                   </div>
 
                   <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-                    {event.rsvpUrl && (
-                      <TrackedLink
-                        id={`event-rsvp-${event.id}`}
-                        event="rsvp_click"
-                        kind="rsvp"
-                        eventId={event.id}
-                        properties={{ event_id: event.id, event_name: event.city, venue: event.venue, url: event.rsvpUrl }}
-                        href={event.rsvpUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    {event.soldOut ? (
+                      <span
                         style={{
-                          fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase",
-                          color: "#fff", padding: "10px 14px", borderRadius: 7,
-                          border: "1px solid rgba(255,255,255,0.25)", whiteSpace: "nowrap",
+                          fontSize: 12, fontWeight: 800, letterSpacing: 1.5, textTransform: "uppercase",
+                          color: "#bdbdbd", padding: "10px 16px", borderRadius: 7,
+                          background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.18)",
+                          whiteSpace: "nowrap",
                         }}
                       >
-                        RSVP
-                      </TrackedLink>
-                    )}
-                    {event.ticketsUrl && (
-                      <TrackedLink
-                        id={`event-tickets-${event.id}`}
-                        event="ticket_click"
-                        kind="ticket"
-                        eventId={event.id}
-                        properties={{ event_id: event.id, event_name: event.city, venue: event.venue, url: event.ticketsUrl }}
-                        href={event.ticketsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase",
-                          color: "#fff", padding: "10px 18px", borderRadius: 7,
-                          background: "var(--color-accent)", whiteSpace: "nowrap",
-                        }}
-                      >
-                        Tickets
-                      </TrackedLink>
+                        Sold Out
+                      </span>
+                    ) : (
+                      <>
+                        {event.rsvpUrl && (
+                          <TrackedLink
+                            id={`event-rsvp-${event.id}`}
+                            event="rsvp_click"
+                            kind="rsvp"
+                            eventId={event.id}
+                            properties={{ event_id: event.id, event_name: event.city, venue: event.venue, url: event.rsvpUrl }}
+                            href={event.rsvpUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase",
+                              color: "#fff", padding: "10px 14px", borderRadius: 7,
+                              border: "1px solid rgba(255,255,255,0.25)", whiteSpace: "nowrap",
+                            }}
+                          >
+                            RSVP
+                          </TrackedLink>
+                        )}
+                        {event.ticketsUrl && (
+                          <TrackedLink
+                            id={`event-tickets-${event.id}`}
+                            event="ticket_click"
+                            kind="ticket"
+                            eventId={event.id}
+                            properties={{ event_id: event.id, event_name: event.city, venue: event.venue, url: event.ticketsUrl }}
+                            href={event.ticketsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase",
+                              color: "#fff", padding: "10px 18px", borderRadius: 7,
+                              background: "var(--color-accent)", whiteSpace: "nowrap",
+                            }}
+                          >
+                            Tickets
+                          </TrackedLink>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>

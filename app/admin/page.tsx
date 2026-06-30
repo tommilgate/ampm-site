@@ -125,6 +125,12 @@ export default async function AdminPage({
               <input id="admin-add-event-rsvp" name="rsvpUrl" placeholder="https://facebook.com/events/..." style={inputStyle} />
             </div>
             <div style={{ gridColumn: "1 / -1" }}>
+              <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 13, color: "#ccc" }}>
+                <input id="admin-add-event-soldout" name="soldOut" type="checkbox" style={{ width: 16, height: 16 }} />
+                Mark as <strong style={{ color: "#fff" }}>Sold Out</strong> (shows a SOLD OUT badge instead of Tickets)
+              </label>
+            </div>
+            <div style={{ gridColumn: "1 / -1" }}>
               <button id="admin-add-event-submit" type="submit" style={{ padding: "12px 28px", borderRadius: 8, background: "#fe5859", color: "#fff", fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, fontSize: 13, border: "none", cursor: "pointer" }}>
                 Add event
               </button>
@@ -140,7 +146,7 @@ export default async function AdminPage({
         <AdminEventsList
           initial={events.map((e) => ({
             id: e.id, date: e.date, city: e.city, venue: e.venue, supports: e.supports, enabled: e.enabled,
-            past: isPast(e.startDate),
+            past: isPast(e.startDate), soldOut: e.soldOut,
             ticketClicks: clicksByEvent[e.id]?.ticket ?? 0,
             rsvpClicks: clicksByEvent[e.id]?.rsvp ?? 0,
           }))}

@@ -66,6 +66,13 @@ export default async function EditEventPage({
             <input id="admin-edit-event-rsvp" name="rsvpUrl" defaultValue={event.rsvpUrl ?? ""} style={inputStyle} />
           </div>
 
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 13, color: "#ccc" }}>
+              <input id="admin-edit-event-soldout" name="soldOut" type="checkbox" defaultChecked={event.soldOut} style={{ width: 16, height: 16 }} />
+              Mark as <strong style={{ color: "#fff" }}>Sold Out</strong> (shows a SOLD OUT badge instead of Tickets)
+            </label>
+          </div>
+
           <div style={{ gridColumn: "1 / -1", display: "flex", gap: 12, marginTop: 4 }}>
             <button id="admin-edit-event-submit" type="submit" style={{ padding: "12px 28px", borderRadius: 8, background: "#fe5859", color: "#fff", fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, fontSize: 13, border: "none", cursor: "pointer" }}>
               Save changes

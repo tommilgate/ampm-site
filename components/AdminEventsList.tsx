@@ -17,7 +17,7 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { reorderEvents, deleteEvent, toggleEvent } from "@/app/admin/actions";
+import { reorderEvents, deleteEvent, toggleEvent, toggleSoldOut } from "@/app/admin/actions";
 
 export type AdminEvent = {
   id: number;
@@ -27,6 +27,7 @@ export type AdminEvent = {
   supports: string | null;
   enabled: boolean;
   past: boolean;
+  soldOut: boolean;
   ticketClicks: number;
   rsvpClicks: number;
 };
@@ -69,6 +70,11 @@ function Row({ ev }: { ev: AdminEvent }) {
               PAST · hidden from site
             </span>
           )}
+          {ev.soldOut && (
+            <span style={{ marginLeft: 8, color: "#bdbdbd", border: "1px solid #555", borderRadius: 4, padding: "1px 6px", fontSize: 10 }}>
+              SOLD OUT
+            </span>
+          )}
         </div>
         <div style={{ fontSize: 15, fontWeight: 700, textTransform: "uppercase" }}>{ev.city}</div>
         <div style={{ fontSize: 12, color: "#999" }}>{ev.venue}{ev.supports ? ` · ${ev.supports}` : ""}</div>
@@ -79,6 +85,13 @@ function Row({ ev }: { ev: AdminEvent }) {
 
       <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
         <a id={`admin-event-edit-${ev.id}`} href={`/admin/edit/${ev.id}`} style={btn}>Edit</a>
+        <form id={`admin-event-soldout-form-${ev.id}`} action={toggleSoldOut}>
+          <input type="hidden" name="id" value={ev.id} />
+          <input type="hidden" name="soldOut" value={String(ev.soldOut)} />
+          <button id={`admin-event-soldout-${ev.id}`} type="submit" style={ev.soldOut ? { ...btn, color: "#fe5859", borderColor: "#4a1f1f" } : btn}>
+            {ev.soldOut ? "Sold ✓" : "Sold out"}
+          </button>
+        </form>
         <form id={`admin-event-toggle-form-${ev.id}`} action={toggleEvent}>
           <input type="hidden" name="id" value={ev.id} />
           <input type="hidden" name="enabled" value={String(ev.enabled)} />
