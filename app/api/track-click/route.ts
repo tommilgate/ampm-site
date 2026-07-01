@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// Records a first-party click. Called via navigator.sendBeacon from TrackedLink.
+// Records a first-party click. Called via navigator.sendBeacon from the delegated ClickTracking listener.
 export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => ({}));

@@ -3,6 +3,7 @@ import { Jost, Tinos } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import SeekaTracking from "@/components/SeekaTracking";
+import ClickTracking from "@/components/ClickTracking";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full flex flex-col text-white" style={{ background: "#000" }}>
         {/* Seeka tracking — beforeInteractive, loads in <head> before all other scripts */}
         <SeekaTracking />
+        <ClickTracking />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

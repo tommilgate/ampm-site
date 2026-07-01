@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import BottomNav from "@/components/BottomNav";
 import Footer from "@/components/Footer";
-import TrackedLink from "@/components/TrackedLink";
 import { prisma } from "@/lib/prisma";
 import { getHero, getButtonColor } from "@/app/admin/actions";
 import { auTodayCutoff } from "@/lib/dates";
@@ -135,13 +134,17 @@ export default async function EventsPage() {
                       </span>
                     ) : (
                       <>
+                        {/* Plain server-rendered anchors — NO client component, so React
+                            never hydrates them and Seeka's cross-domain decoration stays
+                            attached. Tracking is handled by the delegated <ClickTracking />. */}
                         {event.rsvpUrl && (
-                          <TrackedLink
+                          <a
                             id={`event-rsvp-${event.id}`}
-                            event="rsvp_click"
-                            kind="rsvp"
-                            eventId={event.id}
-                            properties={{ event_id: event.id, event_name: event.city, venue: event.venue, url: event.rsvpUrl }}
+                            data-track="rsvp_click"
+                            data-kind="rsvp"
+                            data-event-id={event.id}
+                            data-event-name={event.city}
+                            data-venue={event.venue}
                             href={event.rsvpUrl}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -152,15 +155,16 @@ export default async function EventsPage() {
                             }}
                           >
                             RSVP
-                          </TrackedLink>
+                          </a>
                         )}
                         {event.ticketsUrl && (
-                          <TrackedLink
+                          <a
                             id={`event-tickets-${event.id}`}
-                            event="ticket_click"
-                            kind="ticket"
-                            eventId={event.id}
-                            properties={{ event_id: event.id, event_name: event.city, venue: event.venue, url: event.ticketsUrl }}
+                            data-track="ticket_click"
+                            data-kind="ticket"
+                            data-event-id={event.id}
+                            data-event-name={event.city}
+                            data-venue={event.venue}
                             href={event.ticketsUrl}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -171,7 +175,7 @@ export default async function EventsPage() {
                             }}
                           >
                             Tickets
-                          </TrackedLink>
+                          </a>
                         )}
                       </>
                     )}
